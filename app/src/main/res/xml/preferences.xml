@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:dialogTitle="Escriba la IP y puerto"
+        android:key="txtServidor"
+        android:summary="URL o IP del servidor + puerto"
+        android:defaultValue="https://diegowebpage.000webhostapp.com"
+        android:title="URL Servidor"></EditTextPreference>
+    <EditTextPreference
+        android:dialogTitle="Pagina de inicio"
+        android:key="txtInicio"
+        android:summary="Pagina de inicio al arrancar la app"
+        android:defaultValue="https://www.mitele.es"
+        android:title="Pagina de inicio"></EditTextPreference>
+</PreferenceScreen>
