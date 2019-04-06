@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -60,7 +61,23 @@ public class ffmpeg extends Service {
                 if ( ! inicio ) {
                     //ORIHGINAL...//or... :D Process sh = Runtime.getRuntime().exec( new String[]{"python", "youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=/data/data/com.yoump3/files/bin", "LD_LIBRARY_PATH=/data/data/com.yoump3/files/lib" }, null);
                     //EN CONSOLA VIRTUAL ES NECESARIO ESCRIBIR EXPORT ANTES :o youtube-dl -s -f bestaudio[ext=m4a] -g https://www.youtube.com/watch?v=mGQFZxIuURE > /data/data/com.vidsing/p.txt
-                    Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+                    //Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+
+                    //try{
+                        Process sh = Runtime.getRuntime().exec("su", new String[]{"PATH=$PATH:" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+                        DataOutputStream outputStream = new DataOutputStream(sh.getOutputStream());
+
+                        outputStream.writeBytes("python " + getBaseContext().getFilesDir().getPath() + "/youtube-dl -s -f bestaudio[ext=m4a] -g --no-check-certificate" + url );
+                        outputStream.flush();
+
+                        //outputStream.writeBytes("exit\n");
+                        //outputStream.flush();
+                        sh.waitFor();
+                    /*}catch(IOException e){
+                        throw new Exception(e);
+                    }catch(InterruptedException e){
+                        throw new Exception(e);
+                    }*/
                     //or... :D
                     //Process sh = Runtime.getRuntime().exec( new String[]{"python", "-m", "youtube_dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib" }, null);
                     //inputstream
@@ -92,14 +109,19 @@ public class ffmpeg extends Service {
                     //showNotification( ( new Intent(Intent.ACTION_VIEW) ), url, notId, false );
                 }
                 else{//primera ejecucion
-                    String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/ffmpeg/raw/master/TERMUX.zip", "TERMUX.zip" );
+                    String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/ffmpeg/raw/master/TERMUX649.zip", "TERMUX.zip" );
                     if ( download_result.equals( "ok" ) ){
                         String result = U_D.unzip( getBaseContext() );
                         try{
                             if ( result.equals("ok") ){//https://storage.googleapis.com/sacred-drive-234208.appspot.com/654987234/57c3f123194dfa82f0ae20c63d4e664018f59e9e708f32860f23313439020625-oPaOs0Uc45oPzFLqIX0r.mp4
                                 result = U_D.download( getBaseContext(), "https://youtube-dl.org/downloads/latest/youtube-dl", "youtube-dl" );
                                 if ( result.equals("ok") ) {
-                                    Runtime.getRuntime().exec("chmod -R 777 /data/data/com.vidsing" );// + getBaseContext().getFilesDir().getPath() );
+                                    //Runtime.getRuntime().exec("chmod -R 755 /data/data/com.vidsing");
+                                    //Runtime.getRuntime().exec("chmod -R 755 " + getBaseContext().getFilesDir().getPath() );
+
+                                    Runtime.getRuntime().exec("chmod -R 777 /data/data/com.vidsing");
+                                    Runtime.getRuntime().exec("chmod -R 777 " + getBaseContext().getFilesDir().getPath() );
+                                    Runtime.getRuntime().exec("chmod -R a+x " + getBaseContext().getFilesDir().getPath() );
                                     //Runtime.getRuntime().exec("chmod -R u+x " + getBaseContext().getFilesDir().getPath() );
                                     Runtime.getRuntime().exec("rm -f " + getBaseContext().getFilesDir().getPath() + "/TERMUX.zip" );
                                     Toast.makeText( getApplicationContext(), "Todo correcto!! :D", Toast.LENGTH_LONG).show();
@@ -119,6 +141,10 @@ public class ffmpeg extends Service {
                 // Stop the service using the startId, so that we don't stop
                 // the service in the middle of handling another job
                 stopSelf( msg.arg1 );
+            } catch (	java.lang.SecurityException e) {
+                Log.d( "ERROR", "SSS"+e.toString() );
+                e.printStackTrace();
+                Toast.makeText( getApplicationContext(), "SSSSSContact with Diego :o, download error", Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 Log.d( "ERROR", e.toString() );
                 e.printStackTrace();

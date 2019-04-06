@@ -10,6 +10,6 @@
         android:dialogTitle="Pagina de inicio"
         android:key="txtInicio"
         android:summary="Pagina de inicio al arrancar la app"
-        android:defaultValue="https://www.mitele.es"
+        android:defaultValue="https://www.google.es"
         android:title="Pagina de inicio"></EditTextPreference>
 </PreferenceScreen>

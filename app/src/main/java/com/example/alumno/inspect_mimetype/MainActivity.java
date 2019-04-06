@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener, RetrieveFeedTask.AsyncResponse, ListView.OnItemClickListener, ListView.OnItemLongClickListener, NavigationView.OnNavigationItemSelectedListener{
