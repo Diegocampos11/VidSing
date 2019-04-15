@@ -1,11 +1,13 @@
 package com.example.alumno.inspect_mimetype;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -23,11 +25,22 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+
+//discover tv devices
+import io.resourcepool.ssdp.model.DiscoveryListener;
+import io.resourcepool.ssdp.model.DiscoveryRequest;
+import io.resourcepool.ssdp.model.SsdpService;
+import io.resourcepool.ssdp.model.SsdpServiceAnnouncement;
+import io.resourcepool.ssdp.client.SsdpClient;
 
 public class MainActivity extends Activity implements View.OnClickListener, RetrieveFeedTask.AsyncResponse, ListView.OnItemClickListener, ListView.OnItemLongClickListener, NavigationView.OnNavigationItemSelectedListener{
 
@@ -49,12 +62,113 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
             String action = intent.getAction();
             if ( action.equals("2") ) {//codigo que recibo desde el servicio
                 Toast.makeText(getBaseContext(), "Hola amigos de youtube " /*+ intent.getExtras().get( "res" )*/, Toast.LENGTH_LONG).show();
+                //withEditText( null );
+                hideLoading();
             }
             else {
                 Toast.makeText(getBaseContext(), "SOY IO 1 " , Toast.LENGTH_LONG).show();
             }
         }
     };
+
+    public void withItems(View view) {
+        //
+        SsdpClient client = SsdpClient.create();
+        DiscoveryRequest networkStorageDevice = DiscoveryRequest.builder()
+                .serviceType("urn:samsung.com:service:MultiScreenService:1")//header established in documentation
+                .build();
+        client.discoverServices(networkStorageDevice, new DiscoveryListener() {
+            @Override
+            public void onServiceDiscovered(SsdpService service) {
+                Log.d("XXXXXX","Found service: " + service);
+                java.net.URL obj = null;
+                /*try {
+                    obj = new URL( "http://192.168.0.165:8001/app/Convergence_Tutorial_TV_/info" );
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    con.setRequestMethod("GET");
+                    con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                    int responseCode = con.getResponseCode();
+                    Log.d( "GET", "GET Response Code :: " + responseCode);
+                    if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                        BufferedReader in = new BufferedReader(new InputStreamReader(
+                                con.getInputStream()));
+                        String inputLine;
+                        StringBuffer response = new StringBuffer();
+
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
+                        }
+                        in.close();
+
+                        // print result
+                        System.out.println(response.toString());
+                    } else {
+                        Log.d( "GET","GET request not worked");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+
+            }
+
+            @Override
+            public void onServiceAnnouncement(SsdpServiceAnnouncement announcement) {
+                Log.d("XXXXXX","Service announced something: " + announcement);
+            }
+
+            @Override
+            public void onFailed(Exception ex) {
+                Log.d("XXXXXX","FAILED: " + ex.toString());
+            }
+        });
+        //client.stopDiscovery();
+
+
+        final String[] items = {"Apple", "Banana", "Orange", "Grapes"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("List of Items")
+
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), items[which] + " is clicked", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        builder.setPositiveButton("OK", null);
+        builder.setNegativeButton("CANCEL", null);
+        //builder.setNeutralButton("NEUTRAL", null);
+        //builder.setPositiveButtonIcon(getResources().getDrawable(android.R.drawable.ic_menu_call, getTheme()));
+        builder.setIcon(getResources().getDrawable( R.drawable.ic_menu_manage, getTheme() ) );
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+        Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        button.setBackgroundColor(Color.BLACK);
+        button.setPadding(0, 0, 20, 0);
+        button.setTextColor(Color.WHITE);
+    }
+
+    public void withListView(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("With Edit Text");
+
+        final EditText input = new EditText(MainActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getApplicationContext(), "Text entered is " + input.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
+    }
 
     private void registerBroadcastReceiver() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -69,7 +183,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         final String action = intent.getAction();
         final String type = intent.getType();
         if ( Intent.ACTION_SEND.equals( action ) && type != null) {
-            if (TEXT_PLAIN.equals( type ) ) {
+            if ( TEXT_PLAIN.equals( type ) ) {
                 Log.d( "YOUMP3", "ENVIADO AL SERVICIO" );
                 //Toast.makeText(getBaseContext(), "New send xd!!", Toast.LENGTH_LONG).show();
                 final String sharedText = intent.getStringExtra( Intent.EXTRA_TEXT );
@@ -136,9 +250,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         web.getSettings().setJavaScriptEnabled(true);
         web.setWebViewClient( new WebViewClient(){
             @Override
-            public void onLoadResource(WebView view, String url){
+            public boolean shouldOverrideUrlLoading(WebView view, String url){
                 if ( ! web.getUrl().equals( URL.getText() ) /*&& ! url.equals( web.getUrl() )*/ ) URL.setText( web.getUrl() );
                 execute( new String[] { "content" , url } );
+                System.out.println( url );
+                return false;
             }
         } );
         web.setWebChromeClient(new WebChromeClient() {
@@ -158,20 +274,23 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                 return false;
             }
         });
-        //cargar pagina para la serie
-        web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this).getString( Preferences.prefInicio, "https://www.google.com.sv") );
         //Barra lateral
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem( R.id.m_item_web );
 
-        /*yoump3*/
+        /*url from youtube*/
         registerBroadcastReceiver();
         processSendIntent( getIntent() );
         /*yoump3*/
+        //cargar pagina preestablecida
+        if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) ) web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this).getString( Preferences.prefInicio, "https://www.google.com.sv") );
 
         //primera ejecucion :D
         primera_ejecucion();
+
+        //showLoading();
+        //withItems( null );
     }
 
     public void primera_ejecucion(){
@@ -199,7 +318,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
         try{
             this.navigateToUrl( this, list.get( position ) );
         }
@@ -215,7 +334,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick( View v ) {
         String URL_s = URL.getText().toString();
         if ( v.getId() == btncargar.getId() && ! URL_s.equals("") ) {
             web.loadUrl( URL_s );//"http://vjs.zencdn.net/v/oceans.mp4""http://" +

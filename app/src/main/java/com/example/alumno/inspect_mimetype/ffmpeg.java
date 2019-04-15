@@ -61,18 +61,18 @@ public class ffmpeg extends Service {
                 if ( ! inicio ) {
                     //ORIHGINAL...//or... :D Process sh = Runtime.getRuntime().exec( new String[]{"python", "youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=/data/data/com.yoump3/files/bin", "LD_LIBRARY_PATH=/data/data/com.yoump3/files/lib" }, null);
                     //EN CONSOLA VIRTUAL ES NECESARIO ESCRIBIR EXPORT ANTES :o youtube-dl -s -f bestaudio[ext=m4a] -g https://www.youtube.com/watch?v=mGQFZxIuURE > /data/data/com.vidsing/p.txt
-                    //Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+                    Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
 
                     //try{
-                        Process sh = Runtime.getRuntime().exec("su", new String[]{"PATH=$PATH:" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
-                        DataOutputStream outputStream = new DataOutputStream(sh.getOutputStream());
+                        //Process sh = Runtime.getRuntime().exec("su", new String[]{"PATH=$PATH:" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+                        //DataOutputStream outputStream = new DataOutputStream(sh.getOutputStream());
 
-                        outputStream.writeBytes("python " + getBaseContext().getFilesDir().getPath() + "/youtube-dl -s -f bestaudio[ext=m4a] -g --no-check-certificate" + url );
-                        outputStream.flush();
+                        //outputStream.writeBytes("python " + getBaseContext().getFilesDir().getPath() + "/youtube-dl -s -f bestaudio[ext=m4a] -g --no-check-certificate" + url );
+                        //outputStream.flush();
 
                         //outputStream.writeBytes("exit\n");
                         //outputStream.flush();
-                        sh.waitFor();
+                        //sh.waitFor();
                     /*}catch(IOException e){
                         throw new Exception(e);
                     }catch(InterruptedException e){
@@ -109,7 +109,7 @@ public class ffmpeg extends Service {
                     //showNotification( ( new Intent(Intent.ACTION_VIEW) ), url, notId, false );
                 }
                 else{//primera ejecucion
-                    String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/ffmpeg/raw/master/TERMUX649.zip", "TERMUX.zip" );
+                    String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/ffmpeg/raw/master/TERMUX.zip", "TERMUX.zip" );//TERMUX649.zip
                     if ( download_result.equals( "ok" ) ){
                         String result = U_D.unzip( getBaseContext() );
                         try{
