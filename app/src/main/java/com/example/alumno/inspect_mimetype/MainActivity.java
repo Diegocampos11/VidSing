@@ -9,6 +9,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,17 +29,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
 //discover tv devices
+import Interfaces.LyricFinderListener;
+import Models.LyricSaver;
+import Models.Track;
+import Utils.LyricHandler;
 import io.resourcepool.ssdp.model.DiscoveryListener;
 import io.resourcepool.ssdp.model.DiscoveryRequest;
 import io.resourcepool.ssdp.model.SsdpService;
@@ -51,6 +61,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
     private final ArrayList<String> list = new ArrayList<String>();
     private ArrayAdapter adapter = null;
     private NavigationView navigationView;
+    //ssdp
+    private SsdpClient client;
+    private ArrayList<SsdpService> servicesFound = new ArrayList<SsdpService>();
+    private String tvSelected;
 
     /*broadcasterReceiver*/
     public static final String TEXT_PLAIN = "text/plain";
@@ -62,8 +76,20 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
             String action = intent.getAction();
             if ( action.equals("2") ) {//codigo que recibo desde el servicio
                 Toast.makeText(getBaseContext(), "Hola amigos de youtube " /*+ intent.getExtras().get( "res" )*/, Toast.LENGTH_LONG).show();
-                //withEditText( null );
                 hideLoading();
+                //withItems( null );
+                Log.d("XXXX", intent.getStringExtra("res") );
+                String res = intent.getStringExtra("res"), title = res.substring( 0, res.indexOf("\n") );
+                //quito la url recien extraida, en este caso title
+                res = res.substring( res.indexOf("\n") + 1 );
+                String video = res.substring( 0, res.indexOf("\n") );
+                //quito la url recien extraida, en este caso video
+                res = res.substring( res.indexOf("\n") + 1 );
+                String audio = res.substring( 0, res.indexOf("\n") );
+                Log.d("XXXX", title );
+                Log.d("XXXX", video );
+                Log.d("XXXX", audio );
+                sendData2TVSetSelected( null, 0, title, video, audio );
             }
             else {
                 Toast.makeText(getBaseContext(), "SOY IO 1 " , Toast.LENGTH_LONG).show();
@@ -73,7 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
 
     public void withItems(View view) {
         //
-        SsdpClient client = SsdpClient.create();
+        client = SsdpClient.create();
         DiscoveryRequest networkStorageDevice = DiscoveryRequest.builder()
                 .serviceType("urn:samsung.com:service:MultiScreenService:1")//header established in documentation
                 .build();
@@ -82,6 +108,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
             public void onServiceDiscovered(SsdpService service) {
                 Log.d("XXXXXX","Found service: " + service);
                 java.net.URL obj = null;
+                servicesFound.add( service );//.getRemoteIp().toString()
                 /*try {
                     obj = new URL( "http://192.168.0.165:8001/app/Convergence_Tutorial_TV_/info" );
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -122,52 +149,18 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                 Log.d("XXXXXX","FAILED: " + ex.toString());
             }
         });
-        //client.stopDiscovery();
-
-
-        final String[] items = {"Apple", "Banana", "Orange", "Grapes"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("List of Items")
-
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), items[which] + " is clicked", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        builder.setPositiveButton("OK", null);
-        builder.setNegativeButton("CANCEL", null);
-        //builder.setNeutralButton("NEUTRAL", null);
-        //builder.setPositiveButtonIcon(getResources().getDrawable(android.R.drawable.ic_menu_call, getTheme()));
-        builder.setIcon(getResources().getDrawable( R.drawable.ic_menu_manage, getTheme() ) );
-
-        AlertDialog alertDialog = builder.create();
-
-        alertDialog.show();
-
-        Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        button.setBackgroundColor(Color.BLACK);
-        button.setPadding(0, 0, 20, 0);
-        button.setTextColor(Color.WHITE);
+        prueba();
     }
 
-    public void withListView(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("With Edit Text");
-
-        final EditText input = new EditText(MainActivity.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        builder.setView(input);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getApplicationContext(), "Text entered is " + input.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
+    public void prueba(){
+        HandlerThread thread = new HandlerThread("ServiceStartArguments",
+                android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        thread.start();
+        Looper mServiceLooper = thread.getLooper();
+        Handlerxx hanslerxx = new Handlerxx( mServiceLooper );
+        Message msg = hanslerxx.obtainMessage();
+        msg.arg1 = 0;
+        hanslerxx.sendMessage( msg );
     }
 
     private void registerBroadcastReceiver() {
@@ -189,6 +182,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                 final String sharedText = intent.getStringExtra( Intent.EXTRA_TEXT );
                 startService(new Intent( this, ffmpeg.class).putExtra("url", sharedText ) );
                 showLoading();
+                //withItems(null);
             }
         }
     }
@@ -284,13 +278,29 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         processSendIntent( getIntent() );
         /*yoump3*/
         //cargar pagina preestablecida
-        if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) ) web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this).getString( Preferences.prefInicio, "https://www.google.com.sv") );
+        if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) )
+            web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this).getString( Preferences.prefInicio, "http://animeflv.com") );
 
         //primera ejecucion :D
         primera_ejecucion();
 
         //showLoading();
         //withItems( null );
+        //sendData2TVSetSelected(null, 0);
+        //get lyrics
+        LyricHandler.Find(new Track("God Is A Woman","Ariana Grande"), new LyricFinderListener() {
+
+            @Override
+            public void OnFound(LyricSaver lyricSaver) {
+                Log.d("XXXX", "Found -> "+ lyricSaver);
+                Log.d("XXXX", lyricSaver.getLyricTxt() );
+            }
+
+            @Override
+            public void OnNotFound(Track track) {
+                System.out.println("NotFound -> "+track);
+            }
+        });
     }
 
     public void primera_ejecucion(){
@@ -426,5 +436,201 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void sendData2TVSetSelected(final String friendlyName, final int which ) {
+        try {
+            //Toast.makeText(getApplicationContext(), friendlyName + " selected", Toast.LENGTH_SHORT).show();
+            //tvSelected = "http:/" + servicesFound.get(which).getRemoteIp().toString() + "/ws/app/VidSing/connect";
+            //Toast.makeText(getApplicationContext(), tvSelected, Toast.LENGTH_LONG).show();
+            //send to emulator
+            HandlerThread thread = new HandlerThread("ServiceStartArguments",
+                    android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            thread.start();
+            Looper mServiceLooper = thread.getLooper();
+            Handlerxx hanslerxx = new Handlerxx( mServiceLooper );
+            Message msg = hanslerxx.obtainMessage();
+            msg.arg1 = 1;
+            hanslerxx.sendMessage( msg );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendData2TVSetSelected(final String friendlyName, final int which, String title, String video, String audio ) {
+        try {
+            //Toast.makeText(getApplicationContext(), friendlyName + " selected", Toast.LENGTH_SHORT).show();
+            //tvSelected = "http:/" + servicesFound.get(which).getRemoteIp().toString() + "/ws/app/VidSing/connect";
+            //Toast.makeText(getApplicationContext(), tvSelected, Toast.LENGTH_LONG).show();
+            //send to emulator
+            HandlerThread thread = new HandlerThread("ServiceStartArguments",
+                    android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            thread.start();
+            Looper mServiceLooper = thread.getLooper();
+            Handlerxx hanslerxx = new Handlerxx( mServiceLooper, video, audio, title, title );
+            Message msg = hanslerxx.obtainMessage();
+            msg.arg1 = 1;
+            hanslerxx.sendMessage( msg );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //error handler
+    private final class Handlerxx extends Handler {
+        private String video;
+        private String audio;
+        private String lyrics;
+        private String title;
+
+        public Handlerxx(Looper looper){
+            super(looper);
+        }
+
+        public Handlerxx(Looper looper, String video){
+            super(looper);
+            this.video = video;
+        }
+
+        public Handlerxx(Looper looper, String video, String audio, String title, String lyrics ) {
+            super(looper);
+            this.video = video;
+            this.audio = audio;
+            this.title = title;
+            this.lyrics = lyrics;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                if ( msg.arg1 == 0 ) {
+                    Thread.sleep(3000);//I do think that it takes a long time detect all devices in the network
+                    client.stopDiscovery();//detengo busqueda
+
+                    //extract friendly name
+                    final String[] friendlyName = new String[servicesFound.size()];
+                    for (int i = 0; i < servicesFound.size(); i++) {
+                        URL obj = new URL(servicesFound.get(i).getLocation());
+                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                        con.setRequestMethod("GET");
+                        con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                        int responseCode = con.getResponseCode();
+                        Log.d("XXXX", "GET Response Code :: " + responseCode);
+                        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                            BufferedReader in = new BufferedReader(new InputStreamReader(
+                                    con.getInputStream()));
+                            String inputLine;
+                            StringBuffer response = new StringBuffer();
+
+                            while ((inputLine = in.readLine()) != null) {
+                                response.append(inputLine);
+                            }
+                            in.close();
+
+                            // print result
+                            String responseString = response.toString();
+                            Log.d("XXXX", responseString);
+                            //stored in the array
+                            friendlyName[i] = responseString.substring(responseString.indexOf("<friendlyName>") + 14, responseString.indexOf("</friendlyName>"));
+                        } else {
+                            Log.d("GET", "GET request not worked");
+                        }
+                    }
+
+
+                    /*final String[] items = new String[ servicesFound.size() ];
+                    for( int i = 0; i < servicesFound.size(); i++ ){//for ( SsdpService service : servicesFound ) {
+                        items[i] = servicesFound.get( i ).getRemoteIp().toString();
+                    }*/
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("List of Samsung TV's")
+
+                            .setItems(friendlyName, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    sendData2TVSetSelected( friendlyName[which], which);
+                                }
+                            });
+
+                    builder.setPositiveButton("OK", null);
+                    builder.setNegativeButton("CANCEL", null);
+                    //builder.setNeutralButton("NEUTRAL", null);
+                    //builder.setPositiveButtonIcon(getResources().getDrawable(android.R.drawable.ic_menu_call, getTheme()));
+                    builder.setIcon(getResources().getDrawable(R.drawable.ic_menu_manage, getTheme()));
+
+                    AlertDialog alertDialog = builder.create();
+
+                    alertDialog.show();
+
+                    Button button = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    button.setBackgroundColor(Color.BLACK);
+                    button.setPadding(0, 0, 20, 0);
+                    button.setTextColor(Color.WHITE);
+                }
+                else{
+
+
+
+                    URL obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/connect");
+                    Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/connect");
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    con.setRequestMethod("POST");
+                    //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                    //headers needed
+                    con.setRequestProperty("SLDeviceID", "12345");
+                    con.setRequestProperty("VendorID", "VenderMe");
+                    con.setRequestProperty("DeviceName", "ANDROID");
+                    con.setRequestProperty("GroupID", "feiGroup");
+                    con.setRequestProperty("ProductID", "SMARTDev");
+                    int responseCode = con.getResponseCode();
+                    Log.d("XXXX", "POST connect Response Code :: " + responseCode);
+                    if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                        Log.d("XXXX", "SUCCESS POST connect");
+                        //send json with data :D
+                        Thread.sleep(3000);
+                        obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
+                        Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
+                        HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+                        conn.setRequestMethod("POST");
+                        //conn.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                        //headers needed
+                        conn.setRequestProperty("Content-Type", "application/json");
+                        conn.setRequestProperty("SLDeviceID", "12345");
+                        //JSON data
+                        JSONObject data = new JSONObject();
+                        data.put("video", video );
+                        data.put( "audio", audio );
+                        data.put( "title", title );
+
+
+                        data.put( "lyrics", lyrics );
+                        //
+                        Log.d("XXXXV", video);
+                        Log.d("XXXXA", audio);
+                        //send JSON
+                        OutputStreamWriter wr = new OutputStreamWriter( conn.getOutputStream() );
+                        wr.write( data.toString() );
+                        wr.flush();
+
+                        //read response from server :')
+                        int responseCodes = conn.getResponseCode();
+                        Log.d("XXXX", "POST quee Response Code :: " + responseCode);
+                        if ( responseCodes == HttpURLConnection.HTTP_OK ) { // success
+                            Log.d("XXXX", "SUCCESS POST quee");
+                        } else {
+                            Log.d("XXXX", "POST quee not worked");
+                        }
+                    } else {
+                        Log.d("XXXX", "POST connect not worked");
+                    }
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            catch ( Exception e ){
+                e.printStackTrace();
+            }
+        }
     }
 }

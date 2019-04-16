@@ -4,8 +4,8 @@
         android:dialogTitle="Escriba la IP y puerto"
         android:key="txtServidor"
         android:summary="URL o IP del servidor + puerto"
-        android:defaultValue="https://diegowebpage.000webhostapp.com"
-        android:title="URL Servidor"></EditTextPreference>
+        android:defaultValue="http://192.168.42.88:8080/ws/app/VidSing"
+        android:title="URL Emulador"></EditTextPreference>
     <EditTextPreference
         android:dialogTitle="Pagina de inicio"
         android:key="txtInicio"

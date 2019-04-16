@@ -61,48 +61,39 @@ public class ffmpeg extends Service {
                 if ( ! inicio ) {
                     //ORIHGINAL...//or... :D Process sh = Runtime.getRuntime().exec( new String[]{"python", "youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=/data/data/com.yoump3/files/bin", "LD_LIBRARY_PATH=/data/data/com.yoump3/files/lib" }, null);
                     //EN CONSOLA VIRTUAL ES NECESARIO ESCRIBIR EXPORT ANTES :o youtube-dl -s -f bestaudio[ext=m4a] -g https://www.youtube.com/watch?v=mGQFZxIuURE > /data/data/com.vidsing/p.txt
-                    Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
-
-                    //try{
-                        //Process sh = Runtime.getRuntime().exec("su", new String[]{"PATH=$PATH:" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
-                        //DataOutputStream outputStream = new DataOutputStream(sh.getOutputStream());
-
-                        //outputStream.writeBytes("python " + getBaseContext().getFilesDir().getPath() + "/youtube-dl -s -f bestaudio[ext=m4a] -g --no-check-certificate" + url );
-                        //outputStream.flush();
-
-                        //outputStream.writeBytes("exit\n");
-                        //outputStream.flush();
-                        //sh.waitFor();
-                    /*}catch(IOException e){
-                        throw new Exception(e);
-                    }catch(InterruptedException e){
-                        throw new Exception(e);
-                    }*/
-                    //or... :D
-                    //Process sh = Runtime.getRuntime().exec( new String[]{"python", "-m", "youtube_dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib" }, null);
-                    //inputstream
+                    /*
+                        PARAMS command:
+                        -s, --simulate                   Do not download the video and do not write
+                        -e, --get-title                  Simulate, quiet but print title
+                        -f, --format FORMAT              Video format code, see the "FORMAT
+                        -g, --get-url                    Simulate, quiet but print URL<<---PRETTY NECESSARY jaja
+                        --no-check-certificate           Suppress HTTPS certificate validation<<<--- Me peta de certificado no encontrado o algo asi xd
+                     */
+                    Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-e", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+                    //or... :DProcess sh = Runtime.getRuntime().exec( new String[]{"python", "-m", "youtube_dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib" }, null);
+                    //inputstream so as to get the result of the command
                     StringBuilder stringBuilder = new StringBuilder();
                     String line = null;
                     try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {//el parentesis en el try es por que automaticamente cerrará el flujo ya que esta clase BUffered... implementa la interfaz  java.lang.AutoCloseable
-                        while ((line = bufferedReader.readLine()) != null) {
-                            stringBuilder.append(line);
+                        while ( (line = bufferedReader.readLine() ) != null) {
+                            stringBuilder.append( line + "\n" );//I will use the salto de linea to separate the URL's
                         }
                     }
-                    //inputstream
                     sh.waitFor();
+                    //finished!!!
                     Toast.makeText(getApplicationContext(), "finish! xd " + stringBuilder.toString(), Toast.LENGTH_LONG).show();
                     String retorno = httpHandler.post(new String[]{"https://diegowebpage.000webhostapp.com/ajax/ajax.php", "url_d", stringBuilder.toString()});
 
                     //ENVIAR RESPUESTA A ACTIVITY
 
                     final Intent activityIntent = new Intent("2");//accion a ejecutar en la activity
-                    activityIntent.putExtra("res", stringBuilder.toString());
-                    getApplicationContext().sendBroadcast(activityIntent);
+                    activityIntent.putExtra("res", stringBuilder.toString() );
+                    getApplicationContext().sendBroadcast( activityIntent );
 
                     //ENVIAR RESPUESTA A ACTIVITY
 
                     Toast.makeText(getApplicationContext(), "finish! xd " + (retorno.equals("[false]") ? "Añadido con éxito :')" : "No añadido :o"), Toast.LENGTH_LONG).show();
-                    Log.d("INFO :D", stringBuilder.toString());
+                    Log.d("INFO :D", stringBuilder.toString() );
                     //os.close();
                     //z
                     //System.out.println( "finish! xd" );

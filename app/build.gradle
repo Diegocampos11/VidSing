@@ -21,12 +21,20 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:27.0.0'
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.apache.commons:commons-collections4:4.1'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.6'
+    implementation 'com.squareup.okhttp:okhttp:2.7.0'
+
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:design:27.0.0'
+    implementation files('libs/jsoup-1.11.3.jar')
 }
