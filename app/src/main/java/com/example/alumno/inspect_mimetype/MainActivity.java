@@ -61,6 +61,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
     private final ArrayList<String> list = new ArrayList<String>();
     private ArrayAdapter adapter = null;
     private NavigationView navigationView;
+    //youtube
+    public String video, audio, title, lyrics;
     //ssdp
     private SsdpClient client;
     private ArrayList<SsdpService> servicesFound = new ArrayList<SsdpService>();
@@ -87,9 +89,24 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                 res = res.substring( res.indexOf("\n") + 1 );
                 String audio = res.substring( 0, res.indexOf("\n") );
                 Log.d("XXXX", title );
+                Log.d("XXXX", "trackname " + title.substring( title.indexOf( "-" ) + 2 ) );
+                Log.d("XXXX", "artist " + title.substring( 0, title.indexOf( " -" ) ) );
+                String wholeTitle = title;
+                if ( title.indexOf( "(" ) != -1 ) {
+                    wholeTitle = title.substring( 0, title.indexOf( "(" ) );
+                    wholeTitle += title.substring( title.indexOf ( ")" ) + 1 );
+                }
+                else if ( title.indexOf( "[" ) != -1 ) {
+                    wholeTitle = title.substring( 0, title.indexOf( "[" ) );
+                    wholeTitle += title.substring( title.indexOf ( "]" ) + 1 );
+                }
+                Log.d("XXXX", "wholeTitle " + wholeTitle );
                 Log.d("XXXX", video );
                 Log.d("XXXX", audio );
-                sendData2TVSetSelected( null, 0, title, video, audio );
+
+
+                withItems( null, wholeTitle, video, audio );//show selecter tv
+                //sendData2TVSetSelected( null, 0, wholeTitle, video, audio );
             }
             else {
                 Toast.makeText(getBaseContext(), "SOY IO 1 " , Toast.LENGTH_LONG).show();
@@ -97,8 +114,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         }
     };
 
-    public void withItems(View view) {
-        //
+    public void withItems(View view, String wholeTitle, String video, String audio) {
+        //established class values
+        this.video = video;
+        this.audio = audio;
+        this.title = wholeTitle;
+        //get all the Samsung smart tv's
         client = SsdpClient.create();
         DiscoveryRequest networkStorageDevice = DiscoveryRequest.builder()
                 .serviceType("urn:samsung.com:service:MultiScreenService:1")//header established in documentation
@@ -149,10 +170,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                 Log.d("XXXXXX","FAILED: " + ex.toString());
             }
         });
-        prueba();
-    }
-
-    public void prueba(){
+        //prueba();
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
@@ -161,6 +179,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         Message msg = hanslerxx.obtainMessage();
         msg.arg1 = 0;
         hanslerxx.sendMessage( msg );
+    }
+
+    public void prueba(){
     }
 
     private void registerBroadcastReceiver() {
@@ -287,20 +308,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         //showLoading();
         //withItems( null );
         //sendData2TVSetSelected(null, 0);
-        //get lyrics
-        LyricHandler.Find(new Track("God Is A Woman","Ariana Grande"), new LyricFinderListener() {
-
-            @Override
-            public void OnFound(LyricSaver lyricSaver) {
-                Log.d("XXXX", "Found -> "+ lyricSaver);
-                Log.d("XXXX", lyricSaver.getLyricTxt() );
-            }
-
-            @Override
-            public void OnNotFound(Track track) {
-                System.out.println("NotFound -> "+track);
-            }
-        });
     }
 
     public void primera_ejecucion(){
@@ -440,15 +447,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
 
     private void sendData2TVSetSelected(final String friendlyName, final int which ) {
         try {
-            //Toast.makeText(getApplicationContext(), friendlyName + " selected", Toast.LENGTH_SHORT).show();
-            //tvSelected = "http:/" + servicesFound.get(which).getRemoteIp().toString() + "/ws/app/VidSing/connect";
-            //Toast.makeText(getApplicationContext(), tvSelected, Toast.LENGTH_LONG).show();
-            //send to emulator
+            Toast.makeText(getApplicationContext(), friendlyName + " selected", Toast.LENGTH_SHORT).show();
+            tvSelected = "http:/" + servicesFound.get(which).getRemoteIp().toString() + ":8080/ws/app/VidSing";///connect
+            Toast.makeText(getApplicationContext(), tvSelected, Toast.LENGTH_LONG).show();
+            //send to smart tv :D
             HandlerThread thread = new HandlerThread("ServiceStartArguments",
                     android.os.Process.THREAD_PRIORITY_BACKGROUND);
             thread.start();
             Looper mServiceLooper = thread.getLooper();
-            Handlerxx hanslerxx = new Handlerxx( mServiceLooper );
+            Handlerxx hanslerxx = new Handlerxx( mServiceLooper, this.video, this.audio, this.title, this.title );
             Message msg = hanslerxx.obtainMessage();
             msg.arg1 = 1;
             hanslerxx.sendMessage( msg );
@@ -568,11 +575,28 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                     button.setTextColor(Color.WHITE);
                 }
                 else{
+                    //getLyrics
+                    Log.d("XXXX", "Getting lyrics :o");
+                    LyricHandler.Find(new Track( title,title ), new LyricFinderListener() {
+                        @Override
+                        public void OnFound(LyricSaver lyricSaver) {
+                            Log.d("XXXX", "Found -> "+ lyricSaver);
+                            Log.d("XXXX", lyricSaver.getLyricTxt() );
+                            lyrics = lyricSaver.getLyricTxt();
+                        }
 
-
-
-                    URL obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/connect");
-                    Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/connect");
+                        @Override
+                        public void OnNotFound(Track track) {
+                            System.out.println("NotFound -> "+track);
+                            Log.d("XXXX", "NotFound -> "+track );
+                        }
+                    });
+                    //connect---smart tv
+                    Log.d("XXXX", "URL" + tvSelected + "/connect");
+                    URL obj = new URL(tvSelected + "/connect");
+                    //connect---emulator
+                    //URL obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/connect");
+                    //Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/connect");
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                     con.setRequestMethod("POST");
                     //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
@@ -588,8 +612,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                         Log.d("XXXX", "SUCCESS POST connect");
                         //send json with data :D
                         Thread.sleep(3000);
-                        obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
-                        Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
+                        //queue---smart tv
+                        obj = new URL(tvSelected + "/queue");
+                        Log.d("XXXX", "URL" + tvSelected + "/queue");
+                        //queue---emulator
+                        //obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
+                        //Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
                         HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
                         conn.setRequestMethod("POST");
                         //conn.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
@@ -601,8 +629,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                         data.put("video", video );
                         data.put( "audio", audio );
                         data.put( "title", title );
-
-
                         data.put( "lyrics", lyrics );
                         //
                         Log.d("XXXXV", video);
@@ -614,7 +640,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
 
                         //read response from server :')
                         int responseCodes = conn.getResponseCode();
-                        Log.d("XXXX", "POST quee Response Code :: " + responseCode);
+                        Log.d("XXXX", "POST quee Response Code :: " + responseCodes);
                         if ( responseCodes == HttpURLConnection.HTTP_OK ) { // success
                             Log.d("XXXX", "SUCCESS POST quee");
                         } else {
