@@ -73,38 +73,15 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <include layout="@layout/loading_layout"
+        android:visibility="gone"
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="@drawable/rounded_background"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/contenedor"
         app:layout_constraintEnd_toEndOf="@+id/contenedor"
         app:layout_constraintStart_toStartOf="@+id/contenedor"
-        app:layout_constraintTop_toTopOf="@+id/contenedor">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cargando..."
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/progressBar"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="@+id/contenedor" />
 
 </android.support.constraint.ConstraintLayout>

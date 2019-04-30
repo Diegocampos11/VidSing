@@ -69,8 +69,8 @@ public class ffmpeg extends Service {
                         -g, --get-url                    Simulate, quiet but print URL<<---PRETTY NECESSARY jaja
                         --no-check-certificate           Suppress HTTPS certificate validation<<<--- Me peta de certificado no encontrado o algo asi xd
                      */
-                    Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-e", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
-                    //or... :DProcess sh = Runtime.getRuntime().exec( new String[]{"python", "-m", "youtube_dl", "-s", "-f", "bestaudio[ext=m4a]", "-g", "--no-check-certificate", url }, new String[] { "PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib" }, null);
+                    //PATH variable worked till android 6 maybe... in 8 and 9 didn't work-->Process sh = Runtime.getRuntime().exec(new String[]{"python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-e", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{"PATH=" + getBaseContext().getFilesDir().getPath() + "/bin", "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib"}, null);
+                    Process sh = Runtime.getRuntime().exec(new String[]{ getBaseContext().getFilesDir().getPath() + "/bin/python", getBaseContext().getFilesDir().getPath() + "/youtube-dl", "-s", "-e", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]", "-g", "--no-check-certificate", url}, new String[]{ "LD_LIBRARY_PATH=" + getBaseContext().getFilesDir().getPath() + "/lib" }, null);
                     //inputstream so as to get the result of the command
                     StringBuilder stringBuilder = new StringBuilder();
                     String line = null;
@@ -80,9 +80,11 @@ public class ffmpeg extends Service {
                         }
                     }
                     sh.waitFor();
+
+
                     //finished!!!
-                    Toast.makeText(getApplicationContext(), "finish! xd " + stringBuilder.toString(), Toast.LENGTH_LONG).show();
-                    String retorno = httpHandler.post(new String[]{"https://diegowebpage.000webhostapp.com/ajax/ajax.php", "url_d", stringBuilder.toString()});
+                    //Toast.makeText(getApplicationContext(), "finish! xd " , Toast.LENGTH_LONG).show();//+ stringBuilder.toString()
+                    //String retorno = httpHandler.post(new String[]{"https://diegowebpage.000webhostapp.com/ajax/ajax.php", "url_d", stringBuilder.toString()});
 
                     //ENVIAR RESPUESTA A ACTIVITY
 
@@ -92,8 +94,8 @@ public class ffmpeg extends Service {
 
                     //ENVIAR RESPUESTA A ACTIVITY
 
-                    Toast.makeText(getApplicationContext(), "finish! xd " + (retorno.equals("[false]") ? "Añadido con éxito :')" : "No añadido :o"), Toast.LENGTH_LONG).show();
-                    Log.d("INFO :D", stringBuilder.toString() );
+                    //Toast.makeText(getApplicationContext(), "finish! xd " + (retorno.equals("[false]") ? "Añadido con éxito :')" : "No añadido :o"), Toast.LENGTH_LONG).show();
+                    //Log.d("INFO :D", stringBuilder.toString() );
                     //os.close();
                     //z
                     //System.out.println( "finish! xd" );
@@ -176,13 +178,12 @@ public class ffmpeg extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        HandlerThread thread = new HandlerThread("ServiceStartArguments",
-                android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        HandlerThread thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         mServiceLooper = thread.getLooper();
         //
         boolean inicio = intent.getExtras().getBoolean("inicio" );//si es primera vez que la ejecuto :)
-        if ( inicio ) mServiceHandler = new ServiceHandler( mServiceLooper, inicio );//,
+        if ( inicio ) mServiceHandler = new ServiceHandler( mServiceLooper, true );//,
         else mServiceHandler = new ServiceHandler( mServiceLooper, intent.getExtras().getString("url") );
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job

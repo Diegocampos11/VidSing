@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="XXXX" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="73da2969-8644-4672-a295-5e553990809b" name="Default" comment="Properly works in emulator and in tv">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/loading_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/ffmpeg.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/ffmpeg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/tvs_found.xml" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="Inspect_MimeType" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-783">
+              <caret line="400" column="57" selection-start-line="400" selection-start-column="57" selection-end-line="400" selection-end-column="57" />
+              <folding>
+                <element signature="e#2585#2593#0" expanded="true" />
+                <element signature="e#2910#5007#1" />
+                <element signature="e#2989#3026#0" />
+                <element signature="method#registerBroadcastReceiver#0;class#MainActivity#0" />
+                <element signature="method#processSendIntent#0;class#MainActivity#0" />
+                <element signature="e#6376#6846#1" />
+                <element signature="e#6423#6836#1" />
+                <element signature="method#onNewIntent#0;class#MainActivity#0" />
+                <element signature="e#6049#6050#0" expanded="true" />
+                <element signature="e#6102#6103#0" expanded="true" />
+                <element signature="e#9835#10202#0" />
+                <element signature="e#10238#10352#0" />
+                <element signature="method#primera_ejecucion#0;class#MainActivity#0" />
+                <element signature="e#11259#12249#0" />
+                <element signature="e#11484#11923#1" />
+                <element signature="e#11940#12239#1" />
+                <element signature="e#11958#12048#0" />
+                <element signature="e#12270#12433#0" />
+                <element signature="e#12485#12547#0" />
+                <element signature="method#onItemClick#0;class#MainActivity#0" />
+                <element signature="e#12663#12736#0" />
+                <element signature="e#12766#12876#0" />
+                <element signature="method#navigateToUrl#0;class#MainActivity#0" />
+                <element signature="method#onClick#0;class#MainActivity#0" />
+                <element signature="e#13248#13559#1" />
+                <element signature="method#processFinish#0;class#MainActivity#0" />
+                <element signature="e#13724#14420#1" />
+                <element signature="e#13861#14038#1" />
+                <element signature="e#14084#14410#1" />
+                <element signature="method#onBackPressed#0;class#MainActivity#0" />
+                <element signature="e#14759#15426#1" />
+                <element signature="e#14817#15031#1" />
+                <element signature="e#15081#15298#1" />
+                <element signature="e#15304#15416#1" />
+                <element signature="method#onItemLongClick#0;class#MainActivity#0" />
+                <element signature="e#16530#16573#0" />
+                <element signature="method#onNavigationItemSelected#0;class#MainActivity#0" />
+                <element signature="e#16937#17152#1" />
+                <element signature="e#17185#17400#1" />
+                <element signature="e#17434#17609#1" />
+                <element signature="e#20044#20045#0" expanded="true" />
+                <element signature="e#20081#20082#0" expanded="true" />
+                <element signature="method#onServiceAnnouncement#0;class#20268:21110" />
+                <element signature="method#onFailed#0;class#20268:21110" />
+                <element signature="e#20687#20695#0" expanded="true" />
+                <element signature="e#21241#21731#0" expanded="true" />
+                <element signature="e#21730#21731#0" expanded="true" />
+                <element signature="e#21851#22157#0" expanded="true" />
+                <element signature="e#22156#22157#0" expanded="true" />
+                <element signature="e#24038#24082#0" />
+                <element signature="e#30636#30688#0" />
+                <element signature="e#24677#24699#0" />
+                <element signature="class#24856:25490" />
+                <element signature="method#OnFound#0;class#24856:25490" />
+                <element signature="method#OnNotFound#0;class#24856:25490" />
+                <element signature="e#29470#29509#0" />
+                <element signature="method#createURLMethodPost#0;class#Handlerxx#0;class#MainActivity#0" />
+                <element signature="e#27189#27559#0" />
+                <element signature="e#27373#27389#0" />
+                <element signature="e#28834#28932#0" />
+                <element signature="method#sendDataToSmartTV#0;class#Handlerxx#0;class#MainActivity#0" />
+                <element signature="e#24557#27854#0" />
+                <element signature="e#24663#24818#0" />
+                <element signature="e#25407#27753#1" />
+                <element signature="e#25584#25602#0" />
+                <element signature="e#26265#26421#0" />
+                <element signature="e#26900#26933#0" />
+                <element signature="e#27549#27643#1" />
+                <element signature="e#27649#27735#1" />
+                <element signature="e#27759#27840#1" />
+                <element signature="e#27867#27965#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="layoutResourceFile" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>showloa</find>
+      <find>seticon</find>
+      <find>R.layout.tvs_found</find>
+      <find>setcustom</find>
+      <find>( (TextView) view.findViewById( R.id.txtProgressBar ) ).setText(&quot;List of TV's&quot;);</find>
+      <find>id.loading</find>
+      <find>inflate</find>
+      <find>showload</find>
+      <find>list of sam</find>
+      <find>MAinactivi</find>
+      <find>withItems</find>
+      <find>ssdpclient</find>
+      <find>withitems</find>
+      <find>withite</find>
+      <find>.</find>
+      <find>thread =</find>
+      <find>arg1</find>
+      <find>withitem</find>
+      <find>tvSelected</find>
+      <find>hideloading</find>
+      <find>View loading = findViewById( R.id.loading );</find>
+      <find>loading.</find>
+      <find>show</find>
+      <find>hideloain</find>
+      <find>hideloa</find>
+      <find>resend</find>
+      <find>friendlyNames</find>
+      <find>handlerXX</find>
+      <find>diego</find>
+      <find>servicesfound</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>what</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/U_D.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/SsdpClient.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/DiscoveryRequest.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/SsdpClient.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/client/SsdpClient.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/DiscoveryRequest.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/impl/SsdpClientImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/SsdpClient.java" />
+        <option value="$PROJECT_DIR$/app/src/androidTest/java/ssdp/model/SsdpService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/ssdp/model/SsdpService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/SsdpService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Helpers/Official/AZLyrics.java" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Helpers/Official/Bollywood.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Helpers/Official/JLyric.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Helpers/Official/LyricWiki.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Utils/LyricFinderUtil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Utils/LyricHandler.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/Helpers/Official/Genius.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/tvs_found.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/title_tvs_found.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/loadingLayout.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/loading_layout.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/ffmpeg.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/MainActivity.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-165" />
+    <option name="y" value="211" />
+    <option name="width" value="1346" />
+    <option name="height" value="688" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="android.project.structure.last.selected" value="app" />
+    <property name="android.project.structure.proportion" value="0.15" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="device.picker.selection" value="52002a92ec9b3539" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/java" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/libs/jsoup-1.11.3.jar" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="sync.plugin.last.upgrade.timestamp" value="1549565207147" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Diego\Documents\AndroidProjects\Inspect_MimeType\app\src\main\java\LyricFinder" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.resourcepool.ssdp.client.impl" />
+      <recent name="com.example.alumno.inspect_mimetype" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Diego\Documents\AndroidProjects\Inspect_MimeType\app\src\main\java\io\resourcepool" />
+      <recent name="C:\Users\Diego\Documents\AndroidProjects\Inspect_MimeType\app\src\main\java\com\example\alumno\inspect_mimetype" />
+      <recent name="C:\Users\Diego\Documents\AndroidProjects\Inspect_MimeType\app\src\androidTest\java" />
+      <recent name="C:\Users\Diego\Documents\AndroidProjects\Inspect_MimeType\app\src\main\java\io\resourcepool\ssdp\client" />
+      <recent name="C:\Users\Diego\Documents\AndroidProjects\Inspect_MimeType\app\src\main\java\io\resourcepool\ssdp\model" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+    </configuration>
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="true" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sampled (Java)" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="73da2969-8644-4672-a295-5e553990809b" name="Default" comment="" />
+      <created>1549565180443</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1549565180443</updated>
+    </task>
+    <task id="LOCAL-00001" summary="www">
+      <created>1553784225634</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1553784225634</updated>
+    </task>
+    <task id="LOCAL-00002" summary="www">
+      <created>1553784427021</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1553784427021</updated>
+    </task>
+    <task id="LOCAL-00003" summary="www">
+      <created>1553784527060</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1553784527060</updated>
+    </task>
+    <task id="LOCAL-00004" summary="www">
+      <created>1553785188863</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1553785188863</updated>
+    </task>
+    <task id="LOCAL-00005" summary="www">
+      <created>1553785387748</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1553785387748</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add all necessary run 64&#10;&#10;At least it runs in the android emulator">
+      <created>1554582104966</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1554582104966</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add all necessary run 64&#10;&#10;At least it runs in the android emulator">
+      <created>1555328781470</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1555328781470</updated>
+    </task>
+    <task id="LOCAL-00008" summary="getLyrics implemented :o">
+      <created>1555412555440</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1555412555441</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Properly works in emulator and in tv">
+      <created>1555623182020</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1555623182020</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+    <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24281392" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" weight="0.32980332" />
+      <window_info id="Build Variants" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Designer" order="5" />
+      <window_info id="Captures" order="6" side_tool="true" weight="0.25" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info id="Resources Explorer" order="8" weight="0.32980332" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.42553192" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39934534" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Logcat" order="8" sideWeight="0.49848714" weight="0.5253683" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3289689" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5015129" side_tool="true" weight="0.2442623" />
+      <window_info anchor="bottom" id="Build" order="11" sideWeight="0.49924356" weight="0.19967267" />
+      <window_info anchor="bottom" id="Android Profiler" order="12" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" weight="0.27987897" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Gradle" order="5" />
+      <window_info anchor="right" id="Theme Preview" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Preview" order="8" />
+      <window_info anchor="right" id="Assistant" order="9" weight="0.32980332" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24281392" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" weight="0.32980332" />
+      <window_info id="Build Variants" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Designer" order="5" />
+      <window_info id="Captures" order="6" side_tool="true" weight="0.25" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info id="Resources Explorer" order="8" weight="0.32980332" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295082" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.42553192" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39934534" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info active="true" anchor="bottom" id="Logcat" order="8" sideWeight="0.49848714" visible="true" weight="0.5139116" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3289689" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5015129" side_tool="true" weight="0.2442623" />
+      <window_info anchor="bottom" id="Build" order="11" sideWeight="0.49924356" weight="0.19967267" />
+      <window_info anchor="bottom" id="Android Profiler" order="12" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" weight="0.27987897" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Gradle" order="5" />
+      <window_info anchor="right" id="Theme Preview" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Preview" order="8" />
+      <window_info anchor="right" id="Assistant" order="9" weight="0.32980332" />
+    </layout-to-restore>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
+    <MESSAGE value="www" />
+    <MESSAGE value="add all necessary run 64&#10;&#10;At least it runs in the android emulator" />
+    <MESSAGE value="getLyrics implemented :o" />
+    <MESSAGE value="Properly works in emulator and in tv" />
+    <option name="LAST_COMMIT_MESSAGE" value="Properly works in emulator and in tv" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/util/Utils.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/parser/ResponseParser.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/request/SsdpDiscovery.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/webkit/WebViewClient.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="40" column="43" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/content/Intent.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="133" column="31" selection-start-line="133" selection-start-column="31" selection-end-line="133" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/response/SsdpResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-480">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/RetrieveFeedTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="56" column="1" lean-forward="true" selection-start-line="14" selection-end-line="56" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/preferences.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/Preferences.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="17" column="56" selection-start-line="17" selection-start-column="45" selection-end-line="17" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/os/Handler.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="86" column="25" selection-start-line="86" selection-start-column="25" selection-end-line="86" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/content/Context.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="303" column="25" selection-start-line="303" selection-start-column="25" selection-end-line="303" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/lyricfinder/Test.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Test.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Helpers/Official/AZLyrics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="33" column="52" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Helpers/Official/ViewLyrics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4655">
+          <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Utils/LyricSaverUtil.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Helpers/Official/Bollywood.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="26" column="76" selection-start-line="26" selection-start-column="76" selection-end-line="26" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Helpers/Official/JLyric.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="66" column="60" selection-start-line="66" selection-start-column="60" selection-end-line="66" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Interfaces/GUIUpdaterListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Interfaces/LyricFinderListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="6" column="9" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/java/lang/String.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="210" column="18" selection-start-line="210" selection-start-column="18" selection-end-line="210" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Helpers/Official/LyricWiki.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1015">
+          <caret line="66" column="25" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Models/Track.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/os/HandlerThread.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Utils/LyricHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="992">
+          <caret line="34" column="51" selection-start-line="34" selection-start-column="51" selection-end-line="34" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Utils/LyricFinderUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/Helpers/Official/Genius.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4064">
+          <caret line="158" column="40" selection-start-line="158" selection-start-column="40" selection-end-line="158" selection-end-column="40" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/rounded_background.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="6" column="40" selection-start-line="6" selection-start-column="40" selection-end-line="6" selection-end-column="40" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/SsdpService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-189">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/DiscoveryListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="387">
+          <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/impl/SsdpClientImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="76" column="68" lean-forward="true" selection-start-line="76" selection-start-column="68" selection-end-line="76" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/client/SsdpClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding>
+            <element signature="e#699#700#0" expanded="true" />
+            <element signature="e#736#737#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/SsdpRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/loading_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="10" column="51" selection-start-line="10" selection-start-column="51" selection-end-line="10" selection-end-column="51" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="77" column="31" selection-start-line="77" selection-start-column="31" selection-end-line="77" selection-end-column="31" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/io/resourcepool/ssdp/model/DiscoveryRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+          <folding>
+            <element signature="e#540#541#0" expanded="true" />
+            <element signature="e#570#571#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/ffmpeg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="157" column="42" lean-forward="true" selection-start-line="157" selection-start-column="42" selection-end-line="157" selection-end-column="42" />
+          <folding>
+            <element signature="class#ServiceHandler#0;class#ffmpeg#0" />
+            <element signature="method#ServiceHandler#0;class#ServiceHandler#0;class#ffmpeg#0" />
+            <element signature="method#ServiceHandler#1;class#ServiceHandler#0;class#ffmpeg#0" />
+            <element signature="method#handleMessage#0;class#ServiceHandler#0;class#ffmpeg#0" />
+            <element signature="e#1621#1682#0" />
+            <element signature="e#1759#8251#0" />
+            <element signature="e#1793#5675#1" />
+            <element signature="e#1815#2104#0" />
+            <element signature="e#4080#4473#0" />
+            <element signature="e#4306#4451#1" />
+            <element signature="e#4530#4543#0" />
+            <element signature="e#5169#5198#0" />
+            <element signature="e#5696#8053#1" />
+            <element signature="e#5946#7984#1" />
+            <element signature="e#6046#7527#0" />
+            <element signature="e#6102#7501#1" />
+            <element signature="e#6470#7471#1" />
+            <element signature="e#6508#6575#0" />
+            <element signature="e#7570#7921#0" />
+            <element signature="e#8070#8130#0" />
+            <element signature="e#8291#8527#0" />
+            <element signature="e#8550#8775#0" />
+            <element signature="e#8807#9032#0" />
+            <element signature="method#showNotification#0;class#ffmpeg#0" />
+            <element signature="e#9952#10017#0" />
+            <element signature="e#11285#11357#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/optional/org.apache.http.legacy.jar!/org/apache/http/client/methods/HttpPost.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="26" column="31" lean-forward="true" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
+          <folding>
+            <element signature="e#508#509#0" expanded="true" />
+            <element signature="e#559#560#0" expanded="true" />
+            <element signature="e#643#644#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/optional/org.apache.http.legacy.jar!/org/apache/http/client/entity/UrlEncodedFormEntity.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="20" column="65" selection-start-line="20" selection-start-column="65" selection-end-line="20" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/httpHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="31" column="61" lean-forward="true" selection-start-line="31" selection-start-column="61" selection-end-line="31" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/java/net/URLConnection.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-381">
+          <caret line="193" column="16" selection-start-line="193" selection-start-column="16" selection-end-line="193" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/java/net/HttpURLConnection.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="119" column="25" selection-start-line="119" selection-start-column="25" selection-end-line="119" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/view/View.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="742" column="16" selection-start-line="742" selection-start-column="16" selection-end-line="742" selection-end-column="16" />
+          <folding>
+            <element signature="e#26448#26449#0" expanded="true" />
+            <element signature="e#26499#26500#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/widget/ListAdapter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/widget/Adapter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-27/android.jar!/android/app/AlertDialog.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3">
+          <caret line="242" column="35" selection-start-line="242" selection-start-column="35" selection-end-line="242" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/alumno/inspect_mimetype/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-783">
+          <caret line="400" column="57" selection-start-line="400" selection-start-column="57" selection-end-line="400" selection-end-column="57" />
+          <folding>
+            <element signature="e#2585#2593#0" expanded="true" />
+            <element signature="e#2910#5007#1" />
+            <element signature="e#2989#3026#0" />
+            <element signature="method#registerBroadcastReceiver#0;class#MainActivity#0" />
+            <element signature="method#processSendIntent#0;class#MainActivity#0" />
+            <element signature="e#6376#6846#1" />
+            <element signature="e#6423#6836#1" />
+            <element signature="method#onNewIntent#0;class#MainActivity#0" />
+            <element signature="e#6049#6050#0" expanded="true" />
+            <element signature="e#6102#6103#0" expanded="true" />
+            <element signature="e#9835#10202#0" />
+            <element signature="e#10238#10352#0" />
+            <element signature="method#primera_ejecucion#0;class#MainActivity#0" />
+            <element signature="e#11259#12249#0" />
+            <element signature="e#11484#11923#1" />
+            <element signature="e#11940#12239#1" />
+            <element signature="e#11958#12048#0" />
+            <element signature="e#12270#12433#0" />
+            <element signature="e#12485#12547#0" />
+            <element signature="method#onItemClick#0;class#MainActivity#0" />
+            <element signature="e#12663#12736#0" />
+            <element signature="e#12766#12876#0" />
+            <element signature="method#navigateToUrl#0;class#MainActivity#0" />
+            <element signature="method#onClick#0;class#MainActivity#0" />
+            <element signature="e#13248#13559#1" />
+            <element signature="method#processFinish#0;class#MainActivity#0" />
+            <element signature="e#13724#14420#1" />
+            <element signature="e#13861#14038#1" />
+            <element signature="e#14084#14410#1" />
+            <element signature="method#onBackPressed#0;class#MainActivity#0" />
+            <element signature="e#14759#15426#1" />
+            <element signature="e#14817#15031#1" />
+            <element signature="e#15081#15298#1" />
+            <element signature="e#15304#15416#1" />
+            <element signature="method#onItemLongClick#0;class#MainActivity#0" />
+            <element signature="e#16530#16573#0" />
+            <element signature="method#onNavigationItemSelected#0;class#MainActivity#0" />
+            <element signature="e#16937#17152#1" />
+            <element signature="e#17185#17400#1" />
+            <element signature="e#17434#17609#1" />
+            <element signature="e#20044#20045#0" expanded="true" />
+            <element signature="e#20081#20082#0" expanded="true" />
+            <element signature="method#onServiceAnnouncement#0;class#20268:21110" />
+            <element signature="method#onFailed#0;class#20268:21110" />
+            <element signature="e#20687#20695#0" expanded="true" />
+            <element signature="e#21241#21731#0" expanded="true" />
+            <element signature="e#21730#21731#0" expanded="true" />
+            <element signature="e#21851#22157#0" expanded="true" />
+            <element signature="e#22156#22157#0" expanded="true" />
+            <element signature="e#24038#24082#0" />
+            <element signature="e#30636#30688#0" />
+            <element signature="e#24677#24699#0" />
+            <element signature="class#24856:25490" />
+            <element signature="method#OnFound#0;class#24856:25490" />
+            <element signature="method#OnNotFound#0;class#24856:25490" />
+            <element signature="e#29470#29509#0" />
+            <element signature="method#createURLMethodPost#0;class#Handlerxx#0;class#MainActivity#0" />
+            <element signature="e#27189#27559#0" />
+            <element signature="e#27373#27389#0" />
+            <element signature="e#28834#28932#0" />
+            <element signature="method#sendDataToSmartTV#0;class#Handlerxx#0;class#MainActivity#0" />
+            <element signature="e#24557#27854#0" />
+            <element signature="e#24663#24818#0" />
+            <element signature="e#25407#27753#1" />
+            <element signature="e#25584#25602#0" />
+            <element signature="e#26265#26421#0" />
+            <element signature="e#26900#26933#0" />
+            <element signature="e#27549#27643#1" />
+            <element signature="e#27649#27735#1" />
+            <element signature="e#27759#27840#1" />
+            <element signature="e#27867#27965#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
