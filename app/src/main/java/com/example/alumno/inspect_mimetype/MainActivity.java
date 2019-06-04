@@ -13,6 +13,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -40,10 +41,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //discover tv devices
 import Interfaces.LyricFinderListener;
@@ -56,22 +56,24 @@ import io.resourcepool.ssdp.model.SsdpService;
 import io.resourcepool.ssdp.model.SsdpServiceAnnouncement;
 import io.resourcepool.ssdp.client.SsdpClient;
 
-public class MainActivity extends Activity implements View.OnClickListener, RetrieveFeedTask.AsyncResponse, ListView.OnItemClickListener, ListView.OnItemLongClickListener, NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends Activity implements View.OnClickListener, /*RetrieveFeedTask.AsyncResponse,*/ ListView.OnItemClickListener, ListView.OnItemLongClickListener, NavigationView.OnNavigationItemSelectedListener{
 
     private EditText URL;
-    private String url;
     private WebView web;
     private Button btncargar;
     private final ArrayList<String> list = new ArrayList<String>();
     private ArrayAdapter adapter = null;
+    private ArrayAdapter<String> arrayAdapter;
     private NavigationView navigationView;
-    //normal video{just video :)}--youtube{video, audio, title and lyrics}
-    public String video, audio, title, lyrics;
+    //normal video{video, urlToCheck, type :)--- and before that the urls has to be checked out if ther're videos or not :)
+    //--youtube{video, audio, title and lyrics}
+    public String type, video, audio, title, lyrics;
     //ssdp
     private SsdpClient client;
-    private ArrayList<SsdpService> servicesFound = new ArrayList<SsdpService>();
-    private List<String> friendlyNames = new ArrayList<String>();
+    private ArrayList<SsdpService> servicesFound = new ArrayList<>();
+    private List<String> friendlyNames = new ArrayList<>();
     private String tvSelected;
+    private boolean emulatorSelected = false;
 
     /*broadcasterReceiver*/
     public static final String TEXT_PLAIN = "text/plain";
@@ -85,33 +87,39 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                 //hideLoading();
                 //obtengo respuesta del servidor
                 String res = intent.getStringExtra("res");
-                //extraigo el contenido en variables
-                title = res.substring( 0, res.indexOf("\n") );
-                //quito la url recien extraida, en este caso title
-                res = res.substring( res.indexOf("\n") + 1 );
-                video = res.substring( 0, res.indexOf("\n") );
-                //quito la url recien extraida, en este caso video
-                res = res.substring( res.indexOf("\n") + 1 );
-                audio = res.substring( 0, res.indexOf("\n") );
-                //remuevo parentesis (ABC) or [ABC] stuff-- ejemplo Bruno Mars - Finesse (Remix) [Official (CardiB] video]
-                title = title.replaceAll( "([\\[])+([\\s\\S])*([\\]])", "" );
-                title = title.replaceAll( "([\\(])+([\\s\\S])*([\\)])", "" );
-
-                lyrics = title;//it is initialized the lyrics as the title in case the lyrics are not found :)
                 //send to handler and then to smart tv :D
-                resendInformationToHandler();//show selecter tv
+                resendInformationToHandler( res );
             }
         }
     };
 
-    public void resendInformationToHandler() {
+    public void resendInformationToHandler( String res ) {/*This method is used due to the fact that the global variables must be set*/
+        //extraigo el contenido en variables
+        title = res.substring( 0, res.indexOf("\n") );
+        //quito la url recien extraida, en este caso title
+        res = res.substring( res.indexOf("\n") + 1 );
+        video = res.substring( 0, res.indexOf("\n") );
+        //quito la url recien extraida, en este caso video
+        res = res.substring( res.indexOf("\n") + 1 );
+        audio = res.substring( 0, res.indexOf("\n") );
+        //remuevo parentesis (ABC) or [ABC] stuff-- ejemplo Bruno Mars - Finesse (Remix) [Official (CardiB] video]
+        title = title.replaceAll( "([\\[])+([\\s\\S])*([\\]])", "" );
+        title = title.replaceAll( "([\\(])+([\\s\\S])*([\\)])", "" );
+
+        lyrics = title;//it is initialized the lyrics as the title in case the lyrics are not found :)
+        //after initializing the information :D
+        sendToHandler( 0, null );//the source is youtube :D
+    }
+
+    private void sendToHandler( int what, @Nullable String urlToCheck ){
         hideLoading();//NO ME FUNCIONA EN EL HERMOSO HANDLER :)
         HandlerThread thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         Looper mServiceLooper = thread.getLooper();
         Handlerxx hanslerxx = new Handlerxx( mServiceLooper );
         Message msg = hanslerxx.obtainMessage();
-        msg.what = 0;
+        msg.what = what;//discover samsung smart tv devices
+        msg.obj = urlToCheck;
         hanslerxx.sendMessage( msg );
     }
 
@@ -196,11 +204,10 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         web.getSettings().setJavaScriptEnabled(true);
         web.setWebViewClient( new WebViewClient(){
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url){
+            public void onLoadResource(WebView view, String urlToCheck){
                 if ( ! web.getUrl().equals( URL.getText() ) /*&& ! url.equals( web.getUrl() )*/ ) URL.setText( web.getUrl() );
-                execute( new String[] { "content" , url } );
-                System.out.println( url );
-                return false;
+                Log.d("TIGGY", urlToCheck );
+                sendToHandler( 3, urlToCheck );
             }
         } );
         web.setWebChromeClient(new WebChromeClient() {
@@ -231,7 +238,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         /*yoump3*/
         //cargar pagina preestablecida
         if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) )
-            web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this).getString( Preferences.prefInicio, "http://animeflv.com") );
+            web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this ).getString( Preferences.prefInicio, "http://techslides.com/demos/sample-videos/small.mp4" ) );
 
         //primera ejecucion :D
         primera_ejecucion();
@@ -255,7 +262,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
             else{
                 //Toast.makeText(getBaseContext(), "Verificando actualización", Toast.LENGTH_LONG).show();
                 //new RetrieveFeedTask(this,this, new String[] { "actYOU" } ).execute( );
-                Toast.makeText(getBaseContext(), "Ready!!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getBaseContext(), "Ready!!", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Toast.makeText( getBaseContext(), "Error primera ejecucion xd" + e.toString(), Toast.LENGTH_LONG ).show();
@@ -263,24 +270,40 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         }
     }
 
-    private void execute( String... params ){
-        new RetrieveFeedTask(this, params ).execute();
-    }
+//    private void execute( String... params ){
+//        new RetrieveFeedTask(this, params ).execute();
+//    }
 
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
         try{
-            this.navigateToUrl( this, list.get( position ) );
+            video = list.get( position );
+            showAlertDialog();
         }
         catch ( Exception e ){
             Toast.makeText( getBaseContext(), "Error" + e.toString(), Toast.LENGTH_SHORT ).show();
         }
     }
 
-    public void navigateToUrl( Activity activity, String url ){
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+        return true;
+    }
+
+    public void openVideo( /*Activity activity,*/ ){
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData(Uri.parse( url ) );
-        activity.startActivity(i);
+        i.setData( Uri.parse( video ) );
+        this.startActivity(i);
+        // Create the text message with a string
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_VIEW);
+//        sendIntent.setDataAndType( Uri.parse( urlToCheck ), "video/*");
+//
+//        // Verify that the intent will resolve to an activity
+//        if (sendIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivity(sendIntent);
+//        }
     }
 
     @Override
@@ -294,62 +317,197 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         }
     }
 
-    @Override
-    public void processFinish(String type, String url) {/*no quise cambiar todos los parametros en todos lados xd*/
-        if ( type != null ){
-            if ( type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl") ) {
-                Toast.makeText(getBaseContext(), type, Toast.LENGTH_SHORT).show();
-                list.add(url);
-                adapter.notifyDataSetChanged();
-            }
-            else if ( type.equals("result") ){
-                String mensaje = "";
-                if ( url.equals("[false]") ) mensaje = "Añadido con éxito";
-                else if ( url.equals("[true]") ) mensaje = "URL repetida";
-                else mensaje = url;
-                Toast.makeText(getBaseContext(), mensaje , Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    @Override
+//    public void processFinish(String type, String url) {/*no quise cambiar todos los parametros en todos lados xd*/
+//        if ( type != null ){
+//            if ( type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl") ) {
+//                Toast.makeText(getBaseContext(), type, Toast.LENGTH_SHORT).show();
+//                list.add(url);
+//                adapter.notifyDataSetChanged();
+//            }
+//            else if ( type.equals("result") ){
+//                String mensaje = "";
+//                if ( url.equals("[false]") ) mensaje = "Añadido con éxito";
+//                else if ( url.equals("[true]") ) mensaje = "URL repetida";
+//                else mensaje = url;
+//                Toast.makeText(getBaseContext(), mensaje , Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
-        View frame_body_main = findViewById( R.id.frame_body_main );
-        View tab1 = findViewById( R.id.tab1 );
-        View tab2 = findViewById( R.id.tab2 );
-        if ( frame_body_main.getVisibility() == View.GONE ) frame_body_main.setVisibility( View.VISIBLE );
+        //Para ocultar el menu cuando presiono una opción
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if ( drawer.isDrawerOpen( GravityCompat.START ) ){
+            drawer.closeDrawer( GravityCompat.START );
+        }
         else {
-            if ( tab2.getVisibility() == View.VISIBLE ) {
-                findViewById(R.id.tab2).setVisibility(View.GONE);
-                findViewById(R.id.tab1).setVisibility(View.VISIBLE);
+            View frame_body_main = findViewById(R.id.frame_body_main);
+            View tab1 = findViewById(R.id.tab1);
+            View tab2 = findViewById(R.id.tab2);
+            //same application as if you selected the conf
+            if (getFragmentManager().findFragmentById(R.id.contenedor) != null) {//, as a result there's a fragment
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.contenedor)).commit();//clean "all the fragments" in the container :D
+                tab1.setVisibility(View.VISIBLE);
+                tab2.setVisibility(View.GONE);
+                frame_body_main.setVisibility(View.VISIBLE);
                 navigationView.setCheckedItem(R.id.m_item_web);
-            } else if ( tab1.getVisibility() == View.VISIBLE ) {
-                findViewById(R.id.tab1).setVisibility(View.GONE);
-                findViewById(R.id.tab2).setVisibility(View.VISIBLE);
-                navigationView.setCheckedItem(R.id.m_item_videos);
             } else {
-                if ( web.canGoBack() ) web.goBack();
-                else super.onBackPressed();
+                if (tab2.getVisibility() == View.VISIBLE) {
+                    tab1.setVisibility(View.VISIBLE);
+                    tab2.setVisibility(View.GONE);
+                    navigationView.setCheckedItem(R.id.m_item_web);
+                } else if (tab1.getVisibility() == View.VISIBLE) {
+                    if ( web.canGoBack() ) web.goBack();//if the user has surfaced to many web pages and he really wants to go back
+                    else super.onBackPressed();
+                }
             }
         }
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+    private void showAlertDialog(){
         android.app.AlertDialog.Builder alertdialog = new android.app.AlertDialog.Builder( MainActivity.this );
-        alertdialog.setTitle("Add to my web ;)");
+        alertdialog.setTitle("Selecciona una opción");
         //final CharSequence[] items = {"Añadir", "Añadir y eliminar"};
-        alertdialog.setItems( new CharSequence[]{"Añadir", "Añadir y eliminar"}, new DialogInterface.OnClickListener() {
+        alertdialog.setItems( new CharSequence[]{"Seleccionar TV", "Abrir en otra aplicación"}, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int item) {
+            public void onClick(DialogInterface dialog, int res) {
                 //1= url servidor, 2=campo, 3= url
-                String url_servidor =  PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Preferences.prefServer, "https://diegowebpage.000webhostapp.com");
-                if ( item == 0 ) execute( new String[] { "pass", url_servidor, "url", list.get(position) } );
-                else execute( new String[] { "pass", url_servidor, "url_d", list.get(position) } );
+//                String url_servidor =  PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Preferences.prefFontSize, "https://diegowebpage.000webhostapp.com");
+                sendNormalVideo( res );  /*execute( new String[] { "pass", url_servidor, "url", list.get(position) } );*/
+                /*else openVideo( list.get(position) );*//*execute( new String[] { "pass", url_servidor, "url_d", list.get(position) } );*/
             }
         });
         alertdialog.show();
-        return true;
+    }
+
+    private void sendNormalVideo( int res ){
+        if ( res == 0 ){
+            Log.d("XXX", "HANDLER");
+            //sendToHandler( 1, null );//seleccionar tv and source isn't youtube
+
+            selectSmartTV();
+        }
+        else openVideo();
+    }
+
+    private void selectSmartTV(){
+        //clean the lists before adding new devices to it
+        servicesFound = new ArrayList<>();
+        friendlyNames = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<String>( getBaseContext(), android.R.layout.simple_list_item_1, friendlyNames);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        //getting the layout to set it as the custom title
+        LayoutInflater inflater = getLayoutInflater();
+        View viewx = inflater.inflate(R.layout.loading_layout, null);
+        //set the name to the title of the dialog
+        ( (TextView) viewx.findViewById(R.id.txtProgressBar) ).setText("List of Samsung TV's");
+        builder.setCustomTitle( viewx )
+                .setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {//                                    keepSearchingClients = true;//stop keep searching a TV
+                        //set value to the variable so that i won't send params to the method
+                        tvSelected = "http:/" + servicesFound.get( which ).getRemoteIp().toString() + ":8080/ws/app/VidSing";
+                        //                                if (what == 0) {
+                        //                                    afterSelectingTV();//if the source video is a video of youtube
+                        //                                }
+                        //                                else sendDataToSmartTV();
+                    }
+                })
+                .setPositiveButton("Seleccionar emulador", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tvSelected =  "http://192.168.42.88:8080/ws/app/VidSing";
+                        //                        if (what == 0) {
+                        //                            afterSelectingTV();//if the source video is a video of youtube
+                        //                        }
+                        //                        else sendDataToSmartTV();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        client.stopDiscovery();
+                        //keepSearchingClients = true;//detengo busqueda---IMPORTANTE, BLUCLE ENDLESS
+                    }
+                });
+        //builder.setNeutralButton("NEUTRAL", null);
+        //builder.setPositiveButtonIcon(getResources().getDrawable(android.R.drawable.ic_menu_call, getTheme()));
+        //builder.setIcon(getResources().getDrawable(R.drawable.ic_menu_manage, getTheme()));
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        Log.d("XXXXXX", "Creating client");
+        client = SsdpClient.create();
+        DiscoveryRequest networkStorageDevice = DiscoveryRequest.builder()
+                .serviceType("urn:samsung.com:service:MultiScreenService:1")//header established in documentation
+                .build();
+        client.discoverServices(networkStorageDevice, new DiscoveryListener() {
+            @Override
+            public void onServiceDiscovered(SsdpService service) {
+                Log.d("XXXXXX", "found service: " + service);
+                try {
+                    URL obj = new URL( service.getLocation() );
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    con.setRequestMethod("GET");
+                    con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                    int responseCode = con.getResponseCode();
+                    Log.d("XXXX", "GET response Code :: " + responseCode);
+                    if ( responseCode == HttpURLConnection.HTTP_OK ) { // success
+                        BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream() ) );
+                        String inputLine;
+                        StringBuffer response = new StringBuffer();
+                        while ((inputLine = in.readLine()) != null)
+                            response.append(inputLine);
+                        in.close();
+                        // print result
+                        String responseString = response.toString();
+                        Log.d("XXXX", responseString);
+                        //stored in the array
+                        boolean serviceFoundIsNoRepeated = true;
+                        for ( SsdpService serviceStored : servicesFound ){//i don't know if the friendly name can be repeated; therefore, i'm working with .getLocation() instead... i do think that i could work with all the .toString() xd
+                            if ( serviceStored.getLocation().equals( service.getLocation() ) ){
+                                serviceFoundIsNoRepeated = false;
+                                break;
+                            }
+                        }
+                        if ( serviceFoundIsNoRepeated ) {//if it's not repeated in the ArrayList, add it
+                            String friendNameFound = responseString.substring(responseString.indexOf("<friendlyName>") + 14, responseString.indexOf("</friendlyName>"));
+                            servicesFound.add( service );
+                            friendlyNames.add( friendNameFound );
+
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    arrayAdapter.notifyDataSetChanged();
+                                }
+                            });
+                            Log.d("XXXX", "SERVICE ADDED!" + service );
+                        }
+                        Log.d("XXXX", "GET DONE!");
+                    } else {
+                        Log.d("XXXX", "GET request not worked");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("XXXX", e.toString());
+                }
+            }
+
+            @Override
+            public void onServiceAnnouncement(SsdpServiceAnnouncement announcement) {
+                Log.d("XXXXXX", "Service announced something: " + announcement);
+            }
+
+            @Override
+            public void onFailed(Exception ex) {
+                Log.d("XXXXXX", "FAILED: " + ex.toString());
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -360,117 +518,55 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
         View tab1 = findViewById( R.id.tab1 );
         View tab2 = findViewById( R.id.tab2 );
         int id = item.getItemId();
-        if (id == R.id.m_item_videos) {
-            tab1.setVisibility( View.GONE );
-            tab2.setVisibility( View.VISIBLE );
-            if ( frame_body_main.getVisibility() == View.GONE ) frame_body_main.setVisibility( View.VISIBLE );
-        } else if (id == R.id.m_item_web) {
-            tab1.setVisibility( View.VISIBLE );
-            tab2.setVisibility( View.GONE );
-            if ( frame_body_main.getVisibility() == View.GONE ) frame_body_main.setVisibility( View.VISIBLE );
-        } else if (id == R.id.m_item_conf) {
+        if ( id == R.id.m_item_videos ) {
+            tab1.setVisibility(View.GONE);
+            tab2.setVisibility(View.VISIBLE);
+        } else if ( id == R.id.m_item_web ) {
+            tab1.setVisibility(View.VISIBLE);
+            tab2.setVisibility(View.GONE);
+        }
+        else if ( id == R.id.m_item_conf ) {
             frame_body_main.setVisibility( View.GONE );
             getFragmentManager().beginTransaction().replace( R.id.contenedor, new Preferences() ).commit();
         }
+        //if you didn't selected conf since you have just selected it
+        if ( getFragmentManager().findFragmentById(R.id.contenedor) != null ){//, as a result there's a fragment
+            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.contenedor)).commit();//clean "all the fragments" in the container :D
+            frame_body_main.setVisibility(View.VISIBLE);
+        }
         //Para ocultar el menu cuando presiono una opción
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     //error handler
     private final class Handlerxx extends Handler {
+        private int what;
 
         public Handlerxx(Looper looper){
             super(looper);
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage( final Message msg) {
             try {
-                if ( msg.what == 0 ) {
-                    Log.d("XXXXXX", "Creating client");
-                    client = SsdpClient.create();
-                    DiscoveryRequest networkStorageDevice = DiscoveryRequest.builder()
-                            .serviceType("urn:samsung.com:service:MultiScreenService:1")//header established in documentation
-                            .build();
-                    client.discoverServices(networkStorageDevice, new DiscoveryListener() {
-                        @Override
-                        public void onServiceDiscovered(SsdpService service) {
-                            Log.d("XXXXXX", "Found service: " + service);
-                            servicesFound.add( service );
-                            try{
-                                URL obj = new URL( service.getLocation() );
-                                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                                con.setRequestMethod("GET");
-                                con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
-                                int responseCode = con.getResponseCode();
-                                Log.d("XXXX", "GET Response Code :: " + responseCode);
-                                if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                                    BufferedReader in = new BufferedReader(new InputStreamReader( con.getInputStream() ) );
-                                    String inputLine;
-                                    StringBuffer response = new StringBuffer();
-                                    while ( (inputLine = in.readLine() ) != null ) response.append(inputLine);
-                                    in.close();
-                                    // print result
-                                    String responseString = response.toString();
-                                    Log.d("XXXX", responseString);
-                                    //stored in the array
-                                    friendlyNames.add( responseString.substring(responseString.indexOf("<friendlyName>") + 14, responseString.indexOf("</friendlyName>") ) );
-                                } else {
-                                    Log.d("GET", "GET request not worked");
-                                }
-                            }
-                            catch (Exception e){
-                                e.printStackTrace();
-                                Log.d("XXXX", e.toString());
-                            }
+                what = msg.what;
+                if ( what == 3 ){
+                    java.net.URL url = new java.net.URL( msg.obj.toString() );
+                    URLConnection u = url.openConnection();
+//                    Log.d("TIGGY2", msg.obj.toString() );
+                    type = u.getHeaderField("Content-Type");
+                    if ( type != null ){
+                        if ( type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl") ) {
+                            Toast.makeText( getBaseContext(), type, Toast.LENGTH_LONG ).show();
+                            list.add( msg.obj.toString() );
+                            adapter.notifyDataSetChanged();
                         }
+                    }
+                }
+                else {
 
-                        @Override
-                        public void onServiceAnnouncement(SsdpServiceAnnouncement announcement) {
-                            Log.d("XXXXXX", "Service announced something: " + announcement);
-                        }
-
-                        @Override
-                        public void onFailed(Exception ex) {
-                            Log.d("XXXXXX", "FAILED: " + ex.toString());
-                        }
-                    });
-                    //extract friendly name
-                    //friendlyNames.add( "DIEGO" );
-                    /*for ( int i = 0; i < servicesFound.size(); i++ ) {
-
-                    }*/
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    //getting the layout to set it as the custom title
-                    LayoutInflater inflater = getLayoutInflater();
-                    View view = inflater.inflate( R.layout.loading_layout, null );
-                    //set the name to the title of the dialog
-                    ( (TextView) view.findViewById( R.id.txtProgressBar ) ).setText("List of Samsung TV's");
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>( MainActivity.this, android.R.layout.simple_list_item_1, friendlyNames );
-                    builder.setCustomTitle( view )
-                            .setAdapter( arrayAdapter, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //set value to the variable so that i won't send params to the method
-                                    tvSelected = "http:/" + servicesFound.get(which).getRemoteIp().toString() + ":8080/ws/app/VidSing";
-                                    afterSelectingTV();
-                                }
-                            });
-                    //builder.setPositiveButton("OK", null);
-                    builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            client.stopDiscovery();//detengo busqueda---IMPORTANTE, BLUCLE ENDLESS
-                        }
-                    });
-                    //builder.setNeutralButton("NEUTRAL", null);
-                    //builder.setPositiveButtonIcon(getResources().getDrawable(android.R.drawable.ic_menu_call, getTheme()));
-                    //builder.setIcon(getResources().getDrawable(R.drawable.ic_menu_manage, getTheme()));
-
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
                 }
             }
             catch ( Exception e ){
@@ -544,8 +640,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                     //queue---smart tv
                     //Log.d("XXXX", "URL" + tvSelected + "/queue");
                     //queue---emulator
-                    //obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
-                    //Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefServer, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
+                    //obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefFontSize, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
+                    //Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefFontSize, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
 
                     con = createURLMethodPost( tvSelected + "/queue" );
                     con.setRequestMethod("POST");
@@ -556,13 +652,15 @@ public class MainActivity extends Activity implements View.OnClickListener, Retr
                     //JSON data
                     JSONObject data = new JSONObject();
                     data.put("video", video);
-                    data.put("audio", audio);
-                    data.put("title", title);
-                    data.put("lyrics", lyrics);
-                    //data.put( "scrollAuto", true );
-                    //
-                    Log.d("XXXXV", video);
-                    Log.d("XXXXA", audio);
+                    if ( what == 0 ) {
+                        data.put("audio", audio );
+                        data.put("title", title );
+                        data.put("lyrics", lyrics );
+                        data.put("fontSize",  PreferenceManager.getDefaultSharedPreferences( getBaseContext() ).getString( Preferences.prefFontSize, "26" ) );
+                    }
+                    else{
+                        Log.d("XXX", "what" + what);
+                    }
                     //send JSON
                     OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
                     wr.write(data.toString());
