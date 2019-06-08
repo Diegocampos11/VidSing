@@ -1,8 +1,7 @@
-package com.example.alumno.inspect_mimetype;
+package com.vidsing;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
@@ -20,16 +19,16 @@ public class Preferences extends PreferenceFragment implements Preference.OnPref
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
         //set summary + current value
-        findPreference(prefFontSize).setSummary( "Tamaño de letra en TV. Valor actual: " + ( (EditTextPreference) findPreference(prefFontSize) ).getText() + "px" );
+        findPreference(prefFontSize).setSummary( getString( R.string.txtfontSizePrefSum) + ( (EditTextPreference) findPreference(prefFontSize) ).getText() + "px" );
         findPreference(prefFontSize).setOnPreferenceChangeListener( this );
-        findPreference( prefInicio).setSummary( "Pagina de inicio. Valor actual: " + ( (EditTextPreference) findPreference(prefInicio) ).getText() );
+        findPreference( prefInicio).setSummary( getString( R.string.txtInicioSum ) + ( (EditTextPreference) findPreference(prefInicio) ).getText() );
         findPreference( prefInicio).setOnPreferenceChangeListener( this );
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if ( preference.getKey().equals(prefFontSize) ) preference.setSummary( "Tamaño de letra actualizada! " + newValue + "px" );
-        else if ( preference.getKey().equals( prefInicio) ) preference.setSummary( "Pagina actualizada! " + newValue );
+        if ( preference.getKey().equals( prefFontSize ) ) preference.setSummary( getString( R.string.txtFontSizeUpdated) + newValue + "px" );
+        else if ( preference.getKey().equals( prefInicio) ) preference.setSummary( getString( R.string.txtInicioUpdated ) + newValue );
         return true;
     }
 }

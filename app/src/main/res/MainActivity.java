@@ -1,4 +1,4 @@
-package com.example.darka.barra_lateral;
+package com.com.darka.barra_lateral;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

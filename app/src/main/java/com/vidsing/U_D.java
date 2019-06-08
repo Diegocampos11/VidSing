@@ -1,4 +1,4 @@
-package com.example.alumno.inspect_mimetype;
+package com.vidsing;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

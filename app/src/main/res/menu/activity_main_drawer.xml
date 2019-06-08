@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view"
-    tools:context="com.example.app">
+    tools:showIn="navigation_view">
     <group android:id="@+id/line" android:checkableBehavior="single">
         <item
             android:id="@+id/m_item_web"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Web" />
+            android:title="@string/web" />
         <item
             android:id="@+id/m_item_videos"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Videos" />
+            android:title="@string/videos" />
         <item
             android:id="@+id/m_item_conf"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Configuración" />
+            android:title="@string/action_settings" />
     </group>
 </menu>

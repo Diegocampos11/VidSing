@@ -1,4 +1,4 @@
-package com.example.alumno.inspect_mimetype;
+package com.vidsing;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -56,7 +56,7 @@ import io.resourcepool.ssdp.model.SsdpService;
 import io.resourcepool.ssdp.model.SsdpServiceAnnouncement;
 import io.resourcepool.ssdp.client.SsdpClient;
 
-public class MainActivity extends Activity implements View.OnClickListener, /*RetrieveFeedTask.AsyncResponse,*/ ListView.OnItemClickListener, ListView.OnItemLongClickListener, NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends Activity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private EditText URL;
     private WebView web;
@@ -73,7 +73,6 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
     private ArrayList<SsdpService> servicesFound = new ArrayList<>();
     private List<String> friendlyNames = new ArrayList<>();
     private String tvSelected;
-    private boolean emulatorSelected = false;
 
     /*broadcasterReceiver*/
     public static final String TEXT_PLAIN = "text/plain";
@@ -83,44 +82,33 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
         @Override
         public void onReceive(final Context context, final Intent intent) {
             String action = intent.getAction();
-            if ( action.equals("2") ) {//codigo que recibo desde el servicio
+            if (action.equals("2")) {//codigo que recibo desde el servicio
                 //hideLoading();
                 //obtengo respuesta del servidor
                 String res = intent.getStringExtra("res");
-                //send to handler and then to smart tv :D
-                resendInformationToHandler( res );
+                //send to MyHandler and then to smart tv :D
+                resendInformationToHandler(res);
             }
         }
     };
 
-    public void resendInformationToHandler( String res ) {/*This method is used due to the fact that the global variables must be set*/
+    public void resendInformationToHandler(String res) {/*This method is used due to the fact that the global variables must be set*/
         //extraigo el contenido en variables
-        title = res.substring( 0, res.indexOf("\n") );
+        title = res.substring(0, res.indexOf("\n"));
         //quito la url recien extraida, en este caso title
-        res = res.substring( res.indexOf("\n") + 1 );
-        video = res.substring( 0, res.indexOf("\n") );
+        res = res.substring(res.indexOf("\n") + 1);
+        video = res.substring(0, res.indexOf("\n"));
         //quito la url recien extraida, en este caso video
-        res = res.substring( res.indexOf("\n") + 1 );
-        audio = res.substring( 0, res.indexOf("\n") );
+        res = res.substring(res.indexOf("\n") + 1);
+//        audio = res.substring(0, res.indexOf("\n"));----no needed anymore
         //remuevo parentesis (ABC) or [ABC] stuff-- ejemplo Bruno Mars - Finesse (Remix) [Official (CardiB] video]
-        title = title.replaceAll( "([\\[])+([\\s\\S])*([\\]])", "" );
-        title = title.replaceAll( "([\\(])+([\\s\\S])*([\\)])", "" );
+        title = title.replaceAll("([\\[])+([\\s\\S])*([\\]])", "");
+        title = title.replaceAll("([\\(])+([\\s\\S])*([\\)])", "");
 
-        lyrics = title;//it is initialized the lyrics as the title in case the lyrics are not found :)
-        //after initializing the information :D
-        sendToHandler( 0, null );//the source is youtube :D
-    }
-
-    private void sendToHandler( int what, @Nullable String urlToCheck ){
-        hideLoading();//NO ME FUNCIONA EN EL HERMOSO HANDLER :)
-        HandlerThread thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-        Looper mServiceLooper = thread.getLooper();
-        Handlerxx hanslerxx = new Handlerxx( mServiceLooper );
-        Message msg = hanslerxx.obtainMessage();
-        msg.what = what;//discover samsung smart tv devices
-        msg.obj = urlToCheck;
-        hanslerxx.sendMessage( msg );
+        lyrics = "";//in case lyrics aren't found :)
+        hideLoading();
+        //then select smart tv
+        selectSmartTV( 0 );
     }
 
     private void registerBroadcastReceiver() {
@@ -142,7 +130,6 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
                 final String sharedText = intent.getStringExtra( Intent.EXTRA_TEXT );
                 startService(new Intent( this, ffmpeg.class).putExtra("url", sharedText ) );
                 showLoading();
-                //resendInformationToHandler(null);
             }
         }
     }
@@ -173,43 +160,40 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        //Layout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btncargar = ( Button ) findViewById( R.id.btncargar );
-        URL = ( EditText ) findViewById( R.id.txturl );
-        /*lista*/
-        ListView listview = (ListView) findViewById(R.id.list);//List
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);//Adaptader for list
-        listview.setAdapter( adapter );//Set adaptader, lo coloco aqui por que la lista forma parte del diseño
-
-        /*lista*/
-
-        /*Listeners*/
-        btncargar.setOnClickListener( this );
-        listview.setOnItemClickListener( this );//List too
-        listview.setOnItemLongClickListener( this );
+        btncargar = findViewById( R.id.btncargar );
+        URL = findViewById( R.id.txturl );
+        //load the text needed in the "loading" progressBar
+        ( (TextView) findViewById( R.id.loading ).findViewById( R.id.txtProgressBar ) ).setText("Cargando...");
+        //lista
+        ListView listview = findViewById(R.id.list);//List
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);//Adaptader for video list
+        listview.setAdapter( adapter );
+        //listeners
+        btncargar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnCargarClick();
+            }
+        });
+        listview.setOnItemClickListener( this );
+//        listview.setOnItemLongClickListener( this );
 
         //Web--and settings
         web = ( WebView ) findViewById( R.id.web );
-        //web.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);//Supuestamente ayudaba para reproducir el video
-        /*web.setDownloadListener(new DownloadListener() {//Descargar
-            @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                Toast.makeText( getBaseContext(), url + " " + mimetype, Toast.LENGTH_SHORT ).show();
-            }
-        });*/
-        //Detecto mime type pero por extension de archivo, por lo tanto mejor llamo a asynctask :D
         web.getSettings().setSupportMultipleWindows(true);
-        web.getSettings().setJavaScriptEnabled(true);
+        web.getSettings().setJavaScriptEnabled(true);//needed to load videos with kind of advertisements
+        //so as to analyze url from videos :)
         web.setWebViewClient( new WebViewClient(){
             @Override
             public void onLoadResource(WebView view, String urlToCheck){
-                if ( ! web.getUrl().equals( URL.getText() ) /*&& ! url.equals( web.getUrl() )*/ ) URL.setText( web.getUrl() );
-                Log.d("TIGGY", urlToCheck );
-                sendToHandler( 3, urlToCheck );
+                //so as to rewrite the current url... because this method is executed like a thread, i decided not created one and just set this code here :)
+                if ( ! web.getUrl().equals( URL.getText() ) ) URL.setText( web.getUrl() );
+                createHandler( 2, urlToCheck );
             }
         } );
+        //if the user attempts open a link
         web.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, android.os.Message resultMsg)
@@ -222,42 +206,42 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
                     view.getContext().startActivity(browserIntent);
                 }
                 catch( Exception e){
-                    Toast.makeText( getBaseContext(), "error " + e, Toast.LENGTH_LONG).show();
+                    Toast.makeText( getBaseContext(), getString( R.string.errorTitle ) + ": " + e, Toast.LENGTH_LONG).show();
                 }
                 return false;
             }
         });
+
         //Barra lateral
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem( R.id.m_item_web );
 
-        /*url from youtube*/
-        registerBroadcastReceiver();
-        processSendIntent( getIntent() );
-        /*yoump3*/
         //cargar pagina preestablecida
         if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) )
             web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this ).getString( Preferences.prefInicio, "http://techslides.com/demos/sample-videos/small.mp4" ) );
 
         //primera ejecucion :D
-        primera_ejecucion();
-
-
-        ( (TextView) findViewById( R.id.loading ).findViewById( R.id.txtProgressBar ) ).setText("Cargando...");
-        //showLoading();
-        //resendInformationToHandler( null, "", "", "" );//-- it doesn't work anymore :o
-        //sendData2TVSetSelected(null, 0);
+        primeraEjecucion();
     }
 
-    public void primera_ejecucion(){
+    @Override
+    public void onResume(){
+        super.onResume();
+        /*get information from the service :D*/
+        registerBroadcastReceiver();
+        processSendIntent( getIntent() );
+        /*get information from the service :D*/
+    }
+
+    public void primeraEjecucion(){
         try {
             //Toast.makeText(getBaseContext(), getBaseContext().getFilesDir().getPath(), Toast.LENGTH_LONG).show();
             if ( ! new java.io.File( getBaseContext().getFilesDir().getPath() + "/bin/python" ).exists() ) {//ffmpeg
-                Toast.makeText(getBaseContext(), "Inicializando la aplicación, esto puede tardar unos minutos", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), getString( R.string.appBeingInitialized ), Toast.LENGTH_LONG).show();
                 //download files
                 if ( U_D.isOnline( getBaseContext() ) ) startService( new Intent( this, ffmpeg.class ).putExtra("inicio", true ) );
-                else Toast.makeText(getBaseContext(), "No hay conexión a internet.", Toast.LENGTH_LONG).show();
+                else Toast.makeText(getBaseContext(), getString( R.string.errorMessNoInternet ), Toast.LENGTH_LONG).show();
             }
             else{
                 //Toast.makeText(getBaseContext(), "Verificando actualización", Toast.LENGTH_LONG).show();
@@ -265,7 +249,7 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
 //                Toast.makeText(getBaseContext(), "Ready!!", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Toast.makeText( getBaseContext(), "Error primera ejecucion xd" + e.toString(), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getBaseContext(), getString( R.string.errorFirstExecution ) + e.toString(), Toast.LENGTH_LONG ).show();
             e.printStackTrace();
         }
     }
@@ -278,62 +262,28 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
     public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
         try{
             video = list.get( position );
-            showAlertDialog();
+            selectOptionSelectedVideo();
         }
         catch ( Exception e ){
-            Toast.makeText( getBaseContext(), "Error" + e.toString(), Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getBaseContext(), getString( R.string.errorTitle ) + ": " + e.toString(), Toast.LENGTH_SHORT ).show();
         }
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-
-        return true;
-    }
-
-    public void openVideo( /*Activity activity,*/ ){
+    public void openVideo( ){
         Intent i = new Intent( Intent.ACTION_VIEW );
         i.setData( Uri.parse( video ) );
         this.startActivity(i);
-        // Create the text message with a string
-//        Intent sendIntent = new Intent();
-//        sendIntent.setAction(Intent.ACTION_VIEW);
-//        sendIntent.setDataAndType( Uri.parse( urlToCheck ), "video/*");
-//
-//        // Verify that the intent will resolve to an activity
-//        if (sendIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivity(sendIntent);
-//        }
     }
 
-    @Override
-    public void onClick( View v ) {
+    public void btnCargarClick() {
         String URL_s = URL.getText().toString();
-        if ( v.getId() == btncargar.getId() && ! URL_s.equals("") ) {
+        if ( ! URL_s.equals("") ) {
             web.loadUrl( URL_s );//"http://vjs.zencdn.net/v/oceans.mp4""http://" +
             //Ocultar teclDO
             InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(URL.getWindowToken(), 0);
         }
     }
-
-//    @Override
-//    public void processFinish(String type, String url) {/*no quise cambiar todos los parametros en todos lados xd*/
-//        if ( type != null ){
-//            if ( type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl") ) {
-//                Toast.makeText(getBaseContext(), type, Toast.LENGTH_SHORT).show();
-//                list.add(url);
-//                adapter.notifyDataSetChanged();
-//            }
-//            else if ( type.equals("result") ){
-//                String mensaje = "";
-//                if ( url.equals("[false]") ) mensaje = "Añadido con éxito";
-//                else if ( url.equals("[true]") ) mensaje = "URL repetida";
-//                else mensaje = url;
-//                Toast.makeText(getBaseContext(), mensaje , Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
 
     @Override
     public void onBackPressed() {
@@ -366,11 +316,11 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
         }
     }
 
-    private void showAlertDialog(){
-        android.app.AlertDialog.Builder alertdialog = new android.app.AlertDialog.Builder( MainActivity.this );
-        alertdialog.setTitle("Selecciona una opción");
+    private void selectOptionSelectedVideo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.this );
+        builder.setTitle( getString( R.string.selectOption ) );
         //final CharSequence[] items = {"Añadir", "Añadir y eliminar"};
-        alertdialog.setItems( new CharSequence[]{"Seleccionar TV", "Abrir en otra aplicación"}, new DialogInterface.OnClickListener() {
+        builder.setItems( new CharSequence[]{ getString( R.string.selectTV ) , getString( R.string.openAnotherApp ) }, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int res) {
                 //1= url servidor, 2=campo, 3= url
@@ -379,24 +329,14 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
                 /*else openVideo( list.get(position) );*//*execute( new String[] { "pass", url_servidor, "url_d", list.get(position) } );*/
             }
         });
-        alertdialog.show();
+        builder.show();
     }
 
-    private void sendNormalVideo( int res ){
-        if ( res == 0 ){
-            Log.d("XXX", "HANDLER");
-            //sendToHandler( 1, null );//seleccionar tv and source isn't youtube
-
-            selectSmartTV();
-        }
-        else openVideo();
-    }
-
-    private void selectSmartTV(){
+    private void selectSmartTV( final int what ) {
         //clean the lists before adding new devices to it
         servicesFound = new ArrayList<>();
         friendlyNames = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter<String>( getBaseContext(), android.R.layout.simple_list_item_1, friendlyNames);
+        arrayAdapter = new ArrayAdapter( getBaseContext(), android.R.layout.simple_list_item_1, friendlyNames);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         //getting the layout to set it as the custom title
@@ -410,23 +350,19 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
                     public void onClick(DialogInterface dialog, int which) {//                                    keepSearchingClients = true;//stop keep searching a TV
                         //set value to the variable so that i won't send params to the method
                         tvSelected = "http:/" + servicesFound.get( which ).getRemoteIp().toString() + ":8080/ws/app/VidSing";
-                        //                                if (what == 0) {
-                        //                                    afterSelectingTV();//if the source video is a video of youtube
-                        //                                }
-                        //                                else sendDataToSmartTV();
+                        if ( what == 0 ) createHandler( 0, null );
+                        else createHandler( 1, null );
                     }
                 })
                 .setPositiveButton("Seleccionar emulador", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         tvSelected =  "http://192.168.42.88:8080/ws/app/VidSing";
-                        //                        if (what == 0) {
-                        //                            afterSelectingTV();//if the source video is a video of youtube
-                        //                        }
-                        //                        else sendDataToSmartTV();
+                        if ( what == 0 ) createHandler( 0, null );
+                        else createHandler( 1, null );
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString( R.string.cancel ), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         client.stopDiscovery();
@@ -510,6 +446,33 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
         });
     }
 
+    private void sendNormalVideo( int res ){
+        if ( res == 0 ){
+            selectSmartTV( 1 );
+        }
+        else openVideo();
+    }
+
+    //param what:
+    //0, the source is youtube
+    //1, the source is internet
+    //2, insect mimetype
+    private void createHandler(int what, @Nullable String urlToCheck ){
+        HandlerThread thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND );
+        thread.start();
+        Looper mServiceLooper = thread.getLooper();
+        MyHandler handler = new MyHandler( mServiceLooper );
+        Message msg = handler.obtainMessage();
+        msg.what = what;
+        if ( what == 2 ){
+            msg.obj = urlToCheck;
+        }
+        handler.sendMessage( msg );
+//        if ( what == 0 || what == 1 ){
+//            handler.sendMessage( msg );
+//        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -540,33 +503,45 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
         return true;
     }
 
-    //error handler
-    private final class Handlerxx extends Handler {
+    private final class MyHandler extends Handler {
+
         private int what;
 
-        public Handlerxx(Looper looper){
-            super(looper);
+        public MyHandler( Looper looper ){
+            super( looper );
         }
 
         @Override
-        public void handleMessage( final Message msg) {
-            try {
-                what = msg.what;
-                if ( what == 3 ){
-                    java.net.URL url = new java.net.URL( msg.obj.toString() );
-                    URLConnection u = url.openConnection();
-//                    Log.d("TIGGY2", msg.obj.toString() );
-                    type = u.getHeaderField("Content-Type");
-                    if ( type != null ){
-                        if ( type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl") ) {
-                            Toast.makeText( getBaseContext(), type, Toast.LENGTH_LONG ).show();
-                            list.add( msg.obj.toString() );
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-                else {
+        public void handleMessage(Message msg) {
+            what = msg.what;
+            switch ( what ){
+                case 0:
+                    getLyrics();
+                    break;
+                case 1:
+                    sendDataToSmartTV();
+                    break;
+                case 2:
+                    checkUrl( msg.obj.toString() );
+                    break;
+                default:
+                    Toast.makeText( getBaseContext(), getString( R.string.notfound ), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
 
+        private void checkUrl( String urlToCheck ){
+            try {
+                java.net.URL url = new java.net.URL( urlToCheck );
+                URLConnection u = url.openConnection();
+                //                    Log.d("TIGGY2", msg.obj.toString() );
+                type = u.getHeaderField("Content-Type");
+                if (type != null) {
+                    if (type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl")) {
+                        Toast.makeText(getBaseContext(), type, Toast.LENGTH_LONG).show();
+                        list.add( urlToCheck );
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
             catch ( Exception e ){
@@ -574,7 +549,7 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
             }
         }
 
-        private void afterSelectingTV(){
+        private void getLyrics(){
             try {
                 //obtener datos musica
                 //getLyrics
@@ -604,85 +579,112 @@ public class MainActivity extends Activity implements View.OnClickListener, /*Re
             }
         }
 
-        private HttpURLConnection createURLMethodPost( String url/*, HashMap<String, String> requestProperties*/ ){
+        private HttpURLConnection createRequest( String url, int typeRequest ){//0=POST, 1=GET
             HttpURLConnection connection = null;
             try {
                 URL obj = new URL( url );
                 connection = (HttpURLConnection) obj.openConnection();
-                connection.setRequestMethod("POST");
+                if( typeRequest == 0 ) connection.setRequestMethod("POST");
+                else connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000); //set timeout to 4 seconds
                 //headers needed
                 //for ( Map.Entry<String, String> entry : requestProperties.entrySet() ) connection.setRequestProperty( entry.getKey(), entry.getValue() );
             }
             catch( Exception e ){
                 e.printStackTrace();
-                Log.d("XXXX", e.toString() );
+                Log.d("XXXXPP", e.toString() );
             }
             return connection;
         }
 
         private void sendDataToSmartTV(){
             try{
-                HttpURLConnection con = createURLMethodPost( tvSelected + "/connect" );
+                //KNOW IF THE APP IS RUNNING
+                HttpURLConnection con = createRequest( tvSelected + "/info", 1 );
                 //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
-                //headers needed
-                con.setRequestProperty("SLDeviceID", "12345");
-                con.setRequestProperty("VendorID", "VenderMe");
-                con.setRequestProperty("DeviceName", "ANDROID");
-                con.setRequestProperty("GroupID", "feiGroup");
-                con.setRequestProperty("ProductID", "SMARTDev");
                 int responseCode = con.getResponseCode();
                 con.disconnect();
                 Log.d("XXXX", "POST connect Response Code :: " + responseCode);
-                if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                    Log.d("XXXX", "SUCCESS POST connect");
-                    //send json with data :D
-                    Thread.sleep(2000);
-                    //queue---smart tv
-                    //Log.d("XXXX", "URL" + tvSelected + "/queue");
-                    //queue---emulator
-                    //obj = new URL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefFontSize, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
-                    //Log.d("XXXX", "URL" + PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(Preferences.prefFontSize, "http://192.168.42.88:8080/ws/app/VidSing") + "/queue");
-
-                    con = createURLMethodPost( tvSelected + "/queue" );
-                    con.setRequestMethod("POST");
-                    //conn.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                if ( responseCode == HttpURLConnection.HTTP_OK ) {
+                    //ESTABLISH THE CONNECTION BETWEEN THE APP AND THE SMART TV
+                    con = createRequest( tvSelected + "/connect", 0 );
+                    //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
                     //headers needed
-                    con.setRequestProperty("Content-Type", "application/json");
                     con.setRequestProperty("SLDeviceID", "12345");
-                    //JSON data
-                    JSONObject data = new JSONObject();
-                    data.put("video", video);
-                    if ( what == 0 ) {
-                        data.put("audio", audio );
-                        data.put("title", title );
-                        data.put("lyrics", lyrics );
-                        data.put("fontSize",  PreferenceManager.getDefaultSharedPreferences( getBaseContext() ).getString( Preferences.prefFontSize, "26" ) );
-                    }
-                    else{
-                        Log.d("XXX", "what" + what);
-                    }
-                    //send JSON
-                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-                    wr.write(data.toString());
-                    wr.flush();
-
-                    //read response from server :')
-                    int responseCodes = con.getResponseCode();
+                    con.setRequestProperty("VendorID", "VenderMe");
+                    con.setRequestProperty("DeviceName", "ANDROID");
+                    con.setRequestProperty("GroupID", "feiGroup");
+                    con.setRequestProperty("ProductID", "SMARTDev");
+                    responseCode = con.getResponseCode();
                     con.disconnect();
-                    Log.d("XXXX", "POST quee Response Code :: " + responseCodes);
-                    if (responseCodes == HttpURLConnection.HTTP_OK) { // success
-                        Log.d("XXXX", "SUCCESS POST quee");
+                    Log.d("XXXX", "POST connect Response Code :: " + responseCode);
+                    if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                        Log.d("XXXX", "SUCCESS POST connect");
+                        //IT'S REALLY NEEDED TO WAIT. I do think that My TV is pretty slow therefore, we need to wait till the tv process the connection
+                        Thread.sleep(2000);
+                        con = createRequest(tvSelected + "/queue", 0 );
+                        con.setRequestMethod("POST");
+                        //conn.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
+                        //headers needed
+                        con.setRequestProperty("Content-Type", "application/json");
+                        con.setRequestProperty("SLDeviceID", "12345");
+                        //JSON data
+                        JSONObject data = new JSONObject();
+                        data.put("video", video);
+                        if (what == 0) {
+//                            data.put("audio", audio);
+                            data.put("title", title);
+                            data.put("lyrics", lyrics);
+                            data.put("fontSize", PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString(Preferences.prefFontSize, "26"));
+                        } else {
+                            Log.d("XXX", "what" + what);
+                        }
+                        //send JSON
+                        OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+                        wr.write(data.toString());
+                        wr.flush();
+
+                        //read response from server :')
+                        int responseCodes = con.getResponseCode();
+                        con.disconnect();
+                        Log.d("XXXX", "POST quee Response Code :: " + responseCodes);
+                        if (responseCodes == HttpURLConnection.HTTP_OK) { // success
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showDialog(getString( R.string.successTitle ), getString( R.string.successMessVideoSent) );
+                                }
+                            });
+                            Log.d("XXXX", "SUCCESS POST quee");
+                        } else {
+                            Log.d("XXXX", "POST quee not worked");
+                        }
                     } else {
-                        Log.d("XXXX", "POST quee not worked");
+                        Log.d("XXXX", "POST connect not worked");
                     }
                 } else {
-                    Log.d("XXXX", "POST connect not worked");
+                    Log.d("XXXX", "GET info application response wasn't 404");
+                    showDialog( getString( R.string.errorTitle ), getString( R.string.errorMessAppNotBeingExecuted ) );
                 }
             }
             catch( Exception e ){
                 e.printStackTrace();
-                Log.d("XXXX", e.toString() );
+                Log.d("XXXXS", e.toString() );
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showDialog(getString( R.string.errorTitle ), getString( R.string.errorMessTimeExecutionLimit ) );
+                    }
+                });
             }
+        }
+
+        private void showDialog( String title, String message ){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle( title );
+            builder.setMessage( message );
+            builder.setPositiveButton(getString( R.string.accept ), null);
+            builder.show();
         }
     }
 }

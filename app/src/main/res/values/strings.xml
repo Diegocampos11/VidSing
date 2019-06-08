@@ -4,4 +4,30 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Picture</string>
+    <string name="web">Web</string>
+    <string name="videos">Videos</string>
+    <string name="notfound">Not found</string>
+    <string name="successTitle">Success</string>
+    <string name="successMessVideoSent">The video has been sent</string>
+    <string name="errorTitle">Error</string>
+    <string name="errorMessAppNotBeingExecuted">VidSing isn\'t running on the Samart TV</string>
+    <string name="errorMessTimeExecutionLimit">Maximum execution time reached. (This is the emulator, so this message won\'t exist)</string>
+    <string name="accept">Accept</string>
+    <string name="appBeingInitialized">Initializing application, this can take a few minutes</string>
+    <string name="errorMessNoInternet">There\'s no Internet conection.</string>
+    <string name="errorFirstExecution">"Error while initializing application: "</string>
+    <string name="selectOption">Select an option</string>
+    <string name="selectTV">Select TV</string>
+    <string name="openAnotherApp">Open in anoher app</string>
+    <string name="cancel">Cancel</string>
+    <string name="txtfontSizePrefSum">"Vaule sent in pixels. Current value: "</string>
+    <string name="txtInicioTitle">Home page</string>
+    <string name="txtFontSizeTitle">Lyrics font size on TV</string>
+    <string name="txtInicioSum">"Home page URL. Current value: "</string>
+    <string name="txtFontSizeUpdated">"Font size updated! "</string>
+    <string name="txtInicioUpdated">"Home page updated! "</string>
+    <string name="firstExecutionSuccess">App initialized accurately!!</string>
+    <string name="errorUnzipDown">Error unzip task. Concact me</string>
+    <string name="errorDownload">Error download task. Contact me</string>
 </resources>

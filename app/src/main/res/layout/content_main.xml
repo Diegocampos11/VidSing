@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contenedor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.alumno.inspect_mimetype.MainActivity"
-    tools:showIn="@layout/app_bar_main"
-    android:id="@+id/contenedor">
+    tools:context="com.vidsing.MainActivity"
+    tools:showIn="@layout/app_bar_main">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/frame_body_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/frame_body_main">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/tab1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,61 +23,75 @@
             tools:layout_constraintRight_creator="1"
             tools:layout_constraintTop_creator="1">
 
-            <WebView
-                android:id="@+id/web"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/btncargar" />
-
             <EditText
                 android:id="@+id/txturl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="4dp" />
+                app:layout_constraintEnd_toStartOf="@+id/btncargar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="@+id/btncargar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/btncargar"
                 android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_alignEnd="@+id/web"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/web"
-                android:layout_marginEnd="20dp"
-                android:text="Cargar" />
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:text="Cargar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.993"
+                app:layout_constraintLeft_toRightOf="@id/txturl"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <WebView
+                android:id="@+id/web"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_below="@+id/btncargar"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txturl" />
+        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
-            tools:layout_constraintTop_creator="1"
-            tools:layout_constraintRight_creator="1"
-            tools:layout_constraintBottom_creator="1"
             android:id="@+id/tab2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1">
 
             <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/list">
-                </ListView>
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
 
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 
-    <include layout="@layout/loading_layout"
-        android:visibility="gone"
+    <include
         android:id="@+id/loading"
+        layout="@layout/loading_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/contenedor"
         app:layout_constraintEnd_toEndOf="@+id/contenedor"
         app:layout_constraintStart_toStartOf="@+id/contenedor"

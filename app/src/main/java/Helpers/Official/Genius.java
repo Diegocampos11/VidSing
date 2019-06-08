@@ -1,16 +1,11 @@
 
 package Helpers.Official;
 
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.example.alumno.inspect_mimetype.MainActivity;
-import com.example.alumno.inspect_mimetype.Preferences;
 
 import Models.Lyrics;
 import Utils.HelperType;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -23,7 +18,6 @@ import org.jsoup.select.Elements;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -154,7 +148,7 @@ public class Genius {
         //implement API and get URL ;)
         String url = "";
         try{
-            String geniusRequest = "https://api.genius.com/search?access_token=FfgPFFMHnRqh4d0Yo4NvxkdqDMK1BnlWCxm7GnXUSLtS9dLB2u3ZVhkEB2h6qeZX&q=" + wholeTitle.replaceAll(" ", "%20");
+            String geniusRequest = "https://api.genius.com/search?access_token=FfgPFFMHnRqh4d0Yo4NvxkdqDMK1BnlWCxm7GnXUSLtS9dLB2u3ZVhkEB2h6qeZX&q=" + wholeTitle.replaceAll(" ", "%20").replaceAll( "&", "%26" );
             Log.d("XXXX", "GEnius Request" + geniusRequest);
             URL obj = new URL( geniusRequest );
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VidSing</string>
+    <string name="action_settings">Configuración</string>
+
+    <string name="navigation_drawer_open">Abrir navigation drawer</string>
+    <string name="navigation_drawer_close">Cerrar navigation drawer</string>
+    <string name="nav_header_desc">Imagen</string>
+    <string name="web">Web</string>
+    <string name="videos">Videos</string>
+    <string name="notfound">No encontrado</string>
+    <string name="successTitle">Éxito</string>
+    <string name="successMessVideoSent">El video ha sido enviado</string>
+    <string name="errorTitle">Error</string>
+    <string name="errorMessAppNotBeingExecuted">VidSing no se está ejecutando en la Smart TV</string>
+    <string name="errorMessTimeExecutionLimit">Tiempo de ejecución máximo alcanzado. (Esto es el emulador, este mensaje no existiría).</string>
+    <string name="accept">Aceptar</string>
+    <string name="appBeingInitialized">Inicializando la aplicación, esto puede tardar unos minutos</string>
+    <string name="errorMessNoInternet">No hay conexión a internet.</string>
+    <string name="errorFirstExecution">"Error mientras se inicializaba la aplicación: "</string>
+    <string name="selectOption">Selecciona una opción</string>
+    <string name="selectTV">Seleccionar TV</string>
+    <string name="openAnotherApp">Abrir en otra aplicación</string>
+    <string name="cancel">Cancelar</string>
+    <string name="txtfontSizePrefSum">"Valor enviado en pixeles. Valor actual: "</string>
+    <string name="txtInicioTitle">Página de inicio</string>
+    <string name="txtFontSizeTitle">Tamaño de letra en TV</string>
+    <string name="txtInicioSum">"URL Pagina de inicio. Valor actual: "</string>
+    <string name="txtFontSizeUpdated">"Tamaño de letra actualizada! "</string>
+    <string name="txtInicioUpdated">"Pagina actualizada! "</string>
+    <string name="firstExecutionSuccess">Aplicación inicializada correctamente!!</string>
+    <string name="errorUnzipDown">Error al ejecutar unzip. Contáctame</string>
+    <string name="errorDownload">Error al descargar. Contáctame</string>
+</resources>
