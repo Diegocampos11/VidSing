@@ -104,11 +104,12 @@ public class VidSingService extends Service {
                                 Log.d( "XXXX", "OKX" );
                                 result = U_D.download( getBaseContext(), "https://youtube-dl.org/downloads/latest/youtube-dl", "youtube-dl" );
                                 if ( result.equals("ok") ) {
+                                    //So as to test everything works correctly using Android emulaor and Vysor :)
                                     //Runtime.getRuntime().exec("chmod -R 755 /data/data/com.vidsing");
                                     //Runtime.getRuntime().exec("chmod -R 755 " + getBaseContext().getFilesDir().getPath() );
 
-                                    Runtime.getRuntime().exec("chmod -R 777 /data/data/com.vidsing");
-                                    Runtime.getRuntime().exec("chmod -R 777 " + getBaseContext().getFilesDir().getPath() );
+//                                    Runtime.getRuntime().exec("chmod -R 777 /data/data/com.vidsing");
+//                                    Runtime.getRuntime().exec("chmod -R 777 " + getBaseContext().getFilesDir().getPath() );
                                     Runtime.getRuntime().exec("rm -f " + getBaseContext().getFilesDir().getPath() + "/TERMUX.zip" );
                                     Toast.makeText( getApplicationContext(), getString( R.string.firstExecutionSuccess ), Toast.LENGTH_LONG ).show();
                                 }
