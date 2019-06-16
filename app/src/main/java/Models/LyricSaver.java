@@ -23,7 +23,7 @@ public class LyricSaver implements Serializable {
         if (!(o instanceof LyricSaver)) return false;
         LyricSaver sender = (LyricSaver) o;
         return this.track.getTrackID().equals(sender.getTrack().getTrackID())
-                && this.track.getTrackName().equals(sender.getTrack().getTrackName());
+                && this.track.getWholeTitle().equals(sender.getTrack().getWholeTitle());
     }
 
     @Override

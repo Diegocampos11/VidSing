@@ -6,16 +6,14 @@ import java.util.Objects;
 public class Track implements Serializable {
 
     private String TrackID ;
-    private String TrackName ;
     private String ArtistIDs ;
     private String AlbumID ;
     private String AlbumName ;
-    private String ArtistNames ;
+    private String wholeTitle;
     private int DurationMS ;
 
-    public Track(String TrackName,String ArtistNames){
-        this.ArtistNames=ArtistNames;
-        this.TrackName=TrackName;
+    public Track( String wholeTitle ){
+        this.wholeTitle = wholeTitle;
     }
 
 
@@ -24,23 +22,22 @@ public class Track implements Serializable {
         if (!(o instanceof Track)) return false;
         Track track = (Track) o;
         return Objects.equals(TrackID, track.TrackID) &&
-                Objects.equals(TrackName, track.TrackName);
+                Objects.equals( wholeTitle, track.wholeTitle );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(TrackID, TrackName, ArtistIDs, AlbumID, AlbumName, ArtistNames, DurationMS);
+        return Objects.hash(TrackID, ArtistIDs, AlbumID, AlbumName, wholeTitle, DurationMS);
     }
 
     @Override
     public String toString() {
         return "Track{" +
                 "TrackID='" + TrackID + '\'' +
-                ", TrackName='" + TrackName + '\'' +
                 ", ArtistIDs='" + ArtistIDs + '\'' +
                 ", AlbumID='" + AlbumID + '\'' +
                 ", AlbumName='" + AlbumName + '\'' +
-                ", ArtistNames='" + ArtistNames + '\'' +
+                ", wholeTitle='" + wholeTitle + '\'' +
                 ", DurationMS=" + DurationMS +
                 '}';
     }
@@ -51,14 +48,6 @@ public class Track implements Serializable {
 
     public void setTrackID(String trackID) {
         TrackID = trackID;
-    }
-
-    public String getTrackName() {
-        return TrackName;
-    }
-
-    public void setTrackName(String trackName) {
-        TrackName = trackName;
     }
 
     public String getArtistIDs() {
@@ -85,12 +74,12 @@ public class Track implements Serializable {
         AlbumName = albumName;
     }
 
-    public String getArtistNames() {
-        return ArtistNames;
+    public String getWholeTitle() {
+        return wholeTitle;
     }
 
-    public void setArtistNames(String artistNames) {
-        ArtistNames = artistNames;
+    public void setWholeTitle(String wholeTitle) {
+        this.wholeTitle = wholeTitle;
     }
 
     public int getDurationMS() {

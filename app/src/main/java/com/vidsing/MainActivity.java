@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -24,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -33,9 +36,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -58,12 +59,13 @@ import io.resourcepool.ssdp.client.SsdpClient;
 
 public class MainActivity extends Activity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    private EditText URL;
-    private WebView web;
-    private Button btncargar;
-    private final ArrayList<String> list = new ArrayList<String>();
-    private ArrayAdapter adapter = null;
-    private ArrayAdapter<String> arrayAdapter;
+    private String currentWebSite;
+    private EditText txtURL;
+    private WebView webView;
+    private Button btnCargar;
+    private final ArrayList<String> WebViewVideosFound = new ArrayList<String>();
+    private ArrayAdapter arrayAdapterWebViewVideosFound = null;
+    private ArrayAdapter arrayAdapterTVsFound;
     private NavigationView navigationView;
     //normal video{video, urlToCheck, type :)--- and before that the urls has to be checked out if ther're videos or not :)
     //--youtube{video, audio, title and lyrics}
@@ -72,27 +74,25 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     private SsdpClient client;
     private ArrayList<SsdpService> servicesFound = new ArrayList<>();
     private List<String> friendlyNames = new ArrayList<>();
-    private String tvSelected;
+    private String TVSelected;
+    public static final String TEXT_PLAIN = "text/plain";//share link from youtube or any other app xd
 
-    /*broadcasterReceiver*/
-    public static final String TEXT_PLAIN = "text/plain";
-    /*broadcasterReceiver codigo necesario para recibir codigo del servicio :D*/
-
+    /*broadcasterReceiver get data del servicio :D!!!!!*/
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             String action = intent.getAction();
             if (action.equals("2")) {//codigo que recibo desde el servicio
-                //hideLoading();
                 //obtengo respuesta del servidor
                 String res = intent.getStringExtra("res");
                 //send to MyHandler and then to smart tv :D
-                resendInformationToHandler(res);
+                processInformationFromService(res);
             }
         }
     };
+    /*broadcasterReceiver get data del servicio :D!!!!!*/
 
-    public void resendInformationToHandler(String res) {/*This method is used due to the fact that the global variables must be set*/
+    public void processInformationFromService(String res) {/*This method is used due to the fact that the global variables must be set*/
         //extraigo el contenido en variables
         title = res.substring(0, res.indexOf("\n"));
         //quito la url recien extraida, en este caso title
@@ -100,7 +100,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         video = res.substring(0, res.indexOf("\n"));
         //quito la url recien extraida, en este caso video
         res = res.substring(res.indexOf("\n") + 1);
-//        audio = res.substring(0, res.indexOf("\n"));----no needed anymore
+ //        audio = res.substring(0, res.indexOf("\n"));----no needed anymore
         //remuevo parentesis (ABC) or [ABC] stuff-- ejemplo Bruno Mars - Finesse (Remix) [Official (CardiB] video]
         title = title.replaceAll("([\\[])+([\\s\\S])*([\\]])", "");
         title = title.replaceAll("([\\(])+([\\s\\S])*([\\)])", "");
@@ -111,15 +111,16 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         selectSmartTV( 0 );
     }
 
+    //share link from youtube or any other app xd
+
     private void registerBroadcastReceiver() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("1");
         intentFilter.addAction("2");
         registerReceiver( broadcastReceiver, intentFilter);
     }
-    /*broadcasterReceiver codigo necesario para recibir codigo del servicio :D!!!!!*/
 
-    /*broadcasterReceiver codigo necesario para enviar la info al servicio*/
+
     private void processSendIntent(final Intent intent) {
         final String action = intent.getAction();
         final String type = intent.getType();
@@ -128,20 +129,13 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 Log.d( "YOUMP3", "ENVIADO AL SERVICIO" );
                 //Toast.makeText(getBaseContext(), "New send xd!!", Toast.LENGTH_LONG).show();
                 final String sharedText = intent.getStringExtra( Intent.EXTRA_TEXT );
-                startService(new Intent( this, ffmpeg.class).putExtra("url", sharedText ) );
+                startService(new Intent( this, VidSingService.class).putExtra("url", sharedText ) );
                 showLoading();
             }
         }
     }
 
-    @Override
-    protected void onNewIntent(final Intent intent) {
-        super.onNewIntent(intent);
-        processSendIntent(intent);
-    }
-    /*broadcasterReceiver codigo necesario para enviar la info al servicio*/
-
-    /*broadcasterReceiver*/
+    //share link from youtube or any other app xd
 
     protected void showLoading() {
         changeLoadingVisibility(View.VISIBLE);
@@ -162,16 +156,16 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btncargar = findViewById( R.id.btncargar );
-        URL = findViewById( R.id.txturl );
+        btnCargar = findViewById( R.id.btncargar );
+        txtURL = findViewById( R.id.txturl );
         //load the text needed in the "loading" progressBar
         ( (TextView) findViewById( R.id.loading ).findViewById( R.id.txtProgressBar ) ).setText("Cargando...");
         //lista
         ListView listview = findViewById(R.id.list);//List
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);//Adaptader for video list
-        listview.setAdapter( adapter );
+        arrayAdapterWebViewVideosFound = new ArrayAdapter(this, android.R.layout.simple_list_item_1, WebViewVideosFound);//Adaptader for video WebViewVideosFound
+        listview.setAdapter(arrayAdapterWebViewVideosFound);
         //listeners
-        btncargar.setOnClickListener(new View.OnClickListener() {
+        btnCargar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 btnCargarClick();
@@ -181,20 +175,11 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 //        listview.setOnItemLongClickListener( this );
 
         //Web--and settings
-        web = ( WebView ) findViewById( R.id.web );
-        web.getSettings().setSupportMultipleWindows(true);
-        web.getSettings().setJavaScriptEnabled(true);//needed to load videos with kind of advertisements
-        //so as to analyze url from videos :)
-        web.setWebViewClient( new WebViewClient(){
-            @Override
-            public void onLoadResource(WebView view, String urlToCheck){
-                //so as to rewrite the current url... because this method is executed like a thread, i decided not created one and just set this code here :)
-                if ( ! web.getUrl().equals( URL.getText() ) ) URL.setText( web.getUrl() );
-                createHandler( 2, urlToCheck );
-            }
-        } );
+        webView = ( WebView ) findViewById( R.id.web );
+        webView.getSettings().setSupportMultipleWindows(true);
+        webView.getSettings().setJavaScriptEnabled(true);//needed to load videos with kind of advertisements
         //if the user attempts open a link
-        web.setWebChromeClient(new WebChromeClient() {
+        webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, android.os.Message resultMsg)
             {
@@ -212,35 +197,63 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             }
         });
 
-        //Barra lateral
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem( R.id.m_item_web );
 
-        //cargar pagina preestablecida
-        if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) )
-            web.loadUrl( PreferenceManager.getDefaultSharedPreferences(this ).getString( Preferences.prefInicio, "http://techslides.com/demos/sample-videos/small.mp4" ) );
+        //cargar pagina preestablecida. el if es para que no se cargue when the activity has received an intent :)
+        if ( ! getIntent().getAction().equals( Intent.ACTION_SEND ) ){
+            webView.loadUrl( PreferenceManager.getDefaultSharedPreferences(this ).getString( Preferences.prefInicio, "http://techslides.com/demos/sample-videos/small.mp4" ) );
+            currentWebSite = webView.getUrl();
+            txtURL.setText( currentWebSite );
+        }
+
+        //so as to analyze url from videos :)
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest urlToCheck ) {
+                //set the new url if the website has changed by the user... because this method is executed like a thread, i decided not created one and just set this code here :)
+                //if ( ! webView.getUrl().equals( currentWebSite ) ) txtURL.setText( webView.getUrl() );
+                createHandler( 2, urlToCheck.getUrl().toString() );
+                return null;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon){
+                txtURL.setText( url );
+            }
+        } );
+
+        //Barra lateral
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener( this );
+        navigationView.setCheckedItem( R.id.m_item_web );
 
         //primera ejecucion :D
         primeraEjecucion();
     }
 
     @Override
+    protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
-        /*get information from the service :D*/
-        registerBroadcastReceiver();
-        processSendIntent( getIntent() );
-        /*get information from the service :D*/
+        /*set information to the service :D*/
+        if ( getIntent().getStringExtra( Intent.EXTRA_TEXT ) != null ) {
+            registerBroadcastReceiver();
+            processSendIntent( getIntent() );
+            getIntent().removeExtra( Intent.EXTRA_TEXT );
+        }
+        /*set information to the service :D*/
     }
 
     public void primeraEjecucion(){
         try {
             //Toast.makeText(getBaseContext(), getBaseContext().getFilesDir().getPath(), Toast.LENGTH_LONG).show();
-            if ( ! new java.io.File( getBaseContext().getFilesDir().getPath() + "/bin/python" ).exists() ) {//ffmpeg
+            if ( ! new java.io.File( getBaseContext().getFilesDir().getPath() + "/bin/python" ).exists() ) {//VidSingService
                 Toast.makeText(getBaseContext(), getString( R.string.appBeingInitialized ), Toast.LENGTH_LONG).show();
                 //download files
-                if ( U_D.isOnline( getBaseContext() ) ) startService( new Intent( this, ffmpeg.class ).putExtra("inicio", true ) );
+                if ( U_D.isOnline( getBaseContext() ) ) startService( new Intent( this, VidSingService.class ).putExtra("inicio", true ) );
                 else Toast.makeText(getBaseContext(), getString( R.string.errorMessNoInternet ), Toast.LENGTH_LONG).show();
             }
             else{
@@ -261,7 +274,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id ) {
         try{
-            video = list.get( position );
+            video = WebViewVideosFound.get( position );
+            video = video.substring( video.indexOf("\n") + 1 );
             selectOptionSelectedVideo();
         }
         catch ( Exception e ){
@@ -276,12 +290,12 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     }
 
     public void btnCargarClick() {
-        String URL_s = URL.getText().toString();
+        String URL_s = txtURL.getText().toString();
         if ( ! URL_s.equals("") ) {
-            web.loadUrl( URL_s );//"http://vjs.zencdn.net/v/oceans.mp4""http://" +
+            webView.loadUrl( URL_s );//"http://vjs.zencdn.net/v/oceans.mp4""http://" +
             //Ocultar teclDO
             InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(URL.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(txtURL.getWindowToken(), 0);
         }
     }
 
@@ -309,7 +323,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                     tab2.setVisibility(View.GONE);
                     navigationView.setCheckedItem(R.id.m_item_web);
                 } else if (tab1.getVisibility() == View.VISIBLE) {
-                    if ( web.canGoBack() ) web.goBack();//if the user has surfaced to many web pages and he really wants to go back
+                    if ( webView.canGoBack() ) webView.goBack();//if the user has surfaced to many webView pages and he really wants to go back
                     else super.onBackPressed();
                 }
             }
@@ -325,8 +339,8 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             public void onClick(DialogInterface dialog, int res) {
                 //1= url servidor, 2=campo, 3= url
 //                String url_servidor =  PreferenceManager.getDefaultSharedPreferences( getApplicationContext() ).getString( Preferences.prefFontSize, "https://diegowebpage.000webhostapp.com");
-                sendNormalVideo( res );  /*execute( new String[] { "pass", url_servidor, "url", list.get(position) } );*/
-                /*else openVideo( list.get(position) );*//*execute( new String[] { "pass", url_servidor, "url_d", list.get(position) } );*/
+                sendNormalVideo( res );  /*execute( new String[] { "pass", url_servidor, "url", WebViewVideosFound.get(position) } );*/
+                /*else openVideo( WebViewVideosFound.get(position) );*//*execute( new String[] { "pass", url_servidor, "url_d", WebViewVideosFound.get(position) } );*/
             }
         });
         builder.show();
@@ -336,28 +350,28 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         //clean the lists before adding new devices to it
         servicesFound = new ArrayList<>();
         friendlyNames = new ArrayList<>();
-        arrayAdapter = new ArrayAdapter( getBaseContext(), android.R.layout.simple_list_item_1, friendlyNames);
+        arrayAdapterTVsFound = new ArrayAdapter( getBaseContext(), android.R.layout.simple_list_item_1, friendlyNames);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         //getting the layout to set it as the custom title
         LayoutInflater inflater = getLayoutInflater();
         View viewx = inflater.inflate(R.layout.loading_layout, null);
         //set the name to the title of the dialog
-        ( (TextView) viewx.findViewById(R.id.txtProgressBar) ).setText("List of Samsung TV's");
+        ( (TextView) viewx.findViewById(R.id.txtProgressBar) ).setText( getString( R.string.selectTV ) );
         builder.setCustomTitle( viewx )
-                .setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                .setAdapter(arrayAdapterTVsFound, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {//                                    keepSearchingClients = true;//stop keep searching a TV
                         //set value to the variable so that i won't send params to the method
-                        tvSelected = "http:/" + servicesFound.get( which ).getRemoteIp().toString() + ":8080/ws/app/VidSing";
+                        TVSelected = "http:/" + servicesFound.get( which ).getRemoteIp().toString() + ":8080/ws/app/VidSing";
                         if ( what == 0 ) createHandler( 0, null );
                         else createHandler( 1, null );
                     }
                 })
-                .setPositiveButton("Seleccionar emulador", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString( R.string.emulatorOption ), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        tvSelected =  "http://192.168.42.88:8080/ws/app/VidSing";
+                        TVSelected =  "http://192.168.42.88:8080/ws/app/VidSing";
                         if ( what == 0 ) createHandler( 0, null );
                         else createHandler( 1, null );
                     }
@@ -419,7 +433,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
 
                                 @Override
                                 public void run() {
-                                    arrayAdapter.notifyDataSetChanged();
+                                    arrayAdapterTVsFound.notifyDataSetChanged();
                                 }
                             });
                             Log.d("XXXX", "SERVICE ADDED!" + service );
@@ -484,13 +498,20 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         if ( id == R.id.m_item_videos ) {
             tab1.setVisibility(View.GONE);
             tab2.setVisibility(View.VISIBLE);
-        } else if ( id == R.id.m_item_web ) {
+        }
+        else if ( id == R.id.m_item_web ) {
             tab1.setVisibility(View.VISIBLE);
             tab2.setVisibility(View.GONE);
         }
         else if ( id == R.id.m_item_conf ) {
             frame_body_main.setVisibility( View.GONE );
             getFragmentManager().beginTransaction().replace( R.id.contenedor, new Preferences() ).commit();
+        }
+        else if ( id == R.id.m_item_help ){
+            String pdf = "https://github.com/diego1campos/ffmpeg/raw/master/MANUAL%20DE%20USUARIO.pdf";
+            webView.loadUrl("http://drive.google.com/viewerng/viewer?embedded=true&url=" + pdf);
+            tab1.setVisibility(View.VISIBLE);
+            tab2.setVisibility(View.GONE);
         }
         //if you didn't selected conf since you have just selected it
         if ( getFragmentManager().findFragmentById(R.id.contenedor) != null ){//, as a result there's a fragment
@@ -536,11 +557,16 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 URLConnection u = url.openConnection();
                 //                    Log.d("TIGGY2", msg.obj.toString() );
                 type = u.getHeaderField("Content-Type");
-                if (type != null) {
-                    if (type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl")) {
-                        Toast.makeText(getBaseContext(), type, Toast.LENGTH_LONG).show();
-                        list.add( urlToCheck );
-                        adapter.notifyDataSetChanged();
+                if ( type != null ) {
+                    if ( type.indexOf("video") != -1 || type.equals("application/x-mpegurl") || type.equals("application/vnd.apple.mpegurl") ) {
+                        boolean videoURLFoundIsNoRepeated = true;
+                        for ( String videoURL : WebViewVideosFound )
+                            if ( ! videoURL.equals( urlToCheck ) ) videoURLFoundIsNoRepeated = false;
+                        if ( videoURLFoundIsNoRepeated ) {
+                            Toast.makeText( getBaseContext(), getString( R.string.videoFound ) + type, Toast.LENGTH_LONG ).show();
+                            WebViewVideosFound.add( "Mime-type: " + type + "\n" + urlToCheck );
+                            arrayAdapterWebViewVideosFound.notifyDataSetChanged();
+                        }
                     }
                 }
             }
@@ -554,7 +580,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 //obtener datos musica
                 //getLyrics
                 Log.d("XXXX", "Getting lyrics :o");
-                LyricHandler.Find(new Track(title, title), new LyricFinderListener() {
+                LyricHandler.Find(new Track( title ), new LyricFinderListener() {
                     @Override
                     public void OnFound(LyricSaver lyricSaver) {
                         Log.d("XXXX", "Found -> " + lyricSaver);
@@ -600,14 +626,14 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         private void sendDataToSmartTV(){
             try{
                 //KNOW IF THE APP IS RUNNING
-                HttpURLConnection con = createRequest( tvSelected + "/info", 1 );
+                HttpURLConnection con = createRequest( TVSelected + "/info", 1 );
                 //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
                 int responseCode = con.getResponseCode();
                 con.disconnect();
                 Log.d("XXXX", "POST connect Response Code :: " + responseCode);
                 if ( responseCode == HttpURLConnection.HTTP_OK ) {
                     //ESTABLISH THE CONNECTION BETWEEN THE APP AND THE SMART TV
-                    con = createRequest( tvSelected + "/connect", 0 );
+                    con = createRequest( TVSelected + "/connect", 0 );
                     //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
                     //headers needed
                     con.setRequestProperty("SLDeviceID", "12345");
@@ -622,7 +648,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                         Log.d("XXXX", "SUCCESS POST connect");
                         //IT'S REALLY NEEDED TO WAIT. I do think that My TV is pretty slow therefore, we need to wait till the tv process the connection
                         Thread.sleep(2000);
-                        con = createRequest(tvSelected + "/queue", 0 );
+                        con = createRequest(TVSelected + "/queue", 0 );
                         con.setRequestMethod("POST");
                         //conn.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
                         //headers needed
@@ -663,8 +689,13 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                         Log.d("XXXX", "POST connect not worked");
                     }
                 } else {
-                    Log.d("XXXX", "GET info application response wasn't 404");
-                    showDialog( getString( R.string.errorTitle ), getString( R.string.errorMessAppNotBeingExecuted ) );
+                    Log.d("XXXX", "GET info application response not OK");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showDialog(getString(R.string.errorTitle), getString(R.string.errorMessAppNotBeingExecuted));
+                        }
+                    });
                 }
             }
             catch( Exception e ){

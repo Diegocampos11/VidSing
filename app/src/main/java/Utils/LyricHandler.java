@@ -33,9 +33,8 @@ public class LyricHandler {
 
 
                 Lyrics lyrics = LyricFinderUtil.getLyric(
-                        //track.getArtistNames().split(",")[0]
-                        track.getArtistNames()
-                        , track.getTrackName());
+                        //track.getWholeTitle().split(",")[0]
+                        track.getWholeTitle() );
 
 
                 if (lyrics.getFlag() == Lyrics.POSITIVE_RESULT) {

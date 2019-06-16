@@ -14,97 +14,21 @@ import static Models.Lyrics.NO_RESULT;
 
 public class LyricFinderUtil {
 
-    public static Lyrics getLyric(String ArtistName, String TrackName){
-
+    public static Lyrics getLyric(String wholeTitle ){
         try {
-            Lyrics lyrics=new Lyrics(NO_RESULT);
-            //lyrics=Genius.Find(ArtistName,TrackName);
-            lyrics=Genius.Find( ArtistName/*wholeTitle xd*/ );
-            // System.out.println(lyrics);
+            Lyrics lyrics = new Lyrics(NO_RESULT);
+            lyrics = Genius.Find( wholeTitle );
             if(IsFound(lyrics)) {
                 return NormalizeLyric(lyrics);
             }
             else {
-                lyrics=Genius.Find2(ArtistName,TrackName);
-                if(IsFound(lyrics)) {
-                    return NormalizeLyric(lyrics);
-                }
-                else
-                    return getLyric(ArtistName,TrackName,1);
+                return lyrics;
             }
         }
         catch (Exception e){
             return new Lyrics(NO_RESULT);
         }
 
-    }
-
-    private static Lyrics getLyric(String ArtistName, String TrackName, int Helper) throws UnsupportedEncodingException {
-        Lyrics lyrics=new Lyrics(Lyrics.NO_RESULT);
-
-        if(Helper>8){
-            return new Lyrics(Lyrics.NO_RESULT);
-        }
-        else {
-            switch (Helper){
-                case 1:
-                    lyrics= LyricWiki.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                case 2:
-                    lyrics= AZLyrics.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,3);
-                    break;
-                case 3:
-                    lyrics= Bollywood.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,4);
-                    break;
-                case 4:
-                    lyrics= LyricsMania.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,5);
-                    break;
-                case 5:
-                    lyrics= Lololyrics.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,6);
-                    break;
-                case 6:
-                    lyrics= PLyrics.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,7);
-                    break;
-                case 7:
-                    lyrics= UrbanLyrics.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,8);
-                    break;
-                case 8:
-                    lyrics= JLyric.Find(ArtistName,TrackName);
-                    if(IsFound(lyrics)){
-                        return NormalizeLyric(lyrics);
-                    }
-                    else getLyric(ArtistName,TrackName,9);
-                    break;
-                    default:getLyric(ArtistName,TrackName,85);
-            }
-        }
-        return lyrics;
     }
 
     private static Lyrics NormalizeLyric(Lyrics lyrics){

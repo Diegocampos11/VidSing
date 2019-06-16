@@ -23,9 +23,9 @@ import java.util.zip.ZipInputStream;
  */
 
 public class U_D {
-    /*private static File _zipFile = new File("/data/data/com.yoump3/ffmpeg.zip");
+    /*private static File _zipFile = new File("/data/data/com.yoump3/VidSingService.zip");
     private static InputStream _zipFileStream;
-    private static final String ROOT_LOCATION = "/data/data/com.yoump3/ffmpeg";
+    private static final String ROOT_LOCATION = "/data/data/com.yoump3/VidSingService";
     private static final String TAG = "UNZIPUTIL";*/
 
     public static String unzip(Context context ){

@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">VidSing</string>
     <string name="action_settings">Configuración</string>
+    <string name="action_help">Ayuda</string>
 
     <string name="navigation_drawer_open">Abrir navigation drawer</string>
     <string name="navigation_drawer_close">Cerrar navigation drawer</string>
@@ -13,10 +14,10 @@
     <string name="successMessVideoSent">El video ha sido enviado</string>
     <string name="errorTitle">Error</string>
     <string name="errorMessAppNotBeingExecuted">VidSing no se está ejecutando en la Smart TV</string>
-    <string name="errorMessTimeExecutionLimit">Tiempo de ejecución máximo alcanzado. (Esto es el emulador, este mensaje no existiría).</string>
+    <string name="errorMessTimeExecutionLimit">Tiempo máximo de respuesta del servidor alcanzado. Comprueba que sigues conectado a la misma red</string>
     <string name="accept">Aceptar</string>
     <string name="appBeingInitialized">Inicializando la aplicación, esto puede tardar unos minutos</string>
-    <string name="errorMessNoInternet">No hay conexión a internet.</string>
+    <string name="errorMessNoInternet">No hay conexión a internet</string>
     <string name="errorFirstExecution">"Error mientras se inicializaba la aplicación: "</string>
     <string name="selectOption">Selecciona una opción</string>
     <string name="selectTV">Seleccionar TV</string>
@@ -31,4 +32,6 @@
     <string name="firstExecutionSuccess">Aplicación inicializada correctamente!!</string>
     <string name="errorUnzipDown">Error al ejecutar unzip. Contáctame</string>
     <string name="errorDownload">Error al descargar. Contáctame</string>
+    <string name="videoFound">"Nuevo video encontrado. Mime-type: "</string>
+    <string name="emulatorOption">Emulador</string>
 </resources>

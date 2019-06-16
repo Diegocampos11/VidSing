@@ -19,12 +19,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ffmpeg extends Service {
+public class VidSingService extends Service {
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
-    public ffmpeg(){}//needed
+    public VidSingService(){}//needed
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -94,7 +94,7 @@ public class ffmpeg extends Service {
                     getApplicationContext().sendBroadcast( activityIntent );
                 }
                 else{//primera ejecucion
-                    String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/ffmpeg/raw/master/TERMUX.zip", "TERMUX.zip" );//TERMUX649.zip
+                    String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/VidSingService/raw/master/TERMUX.zip", "TERMUX.zip" );//TERMUX649.zip
                     if ( download_result.equals( "ok" ) ){
                         String result = U_D.unzip( getBaseContext() );
                         try{
