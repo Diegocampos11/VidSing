@@ -40,7 +40,7 @@ public class U_D {
             int count;
             byte[] buffer = new byte[8192];
             while ( ( ze = zis.getNextEntry() ) != null ) {
-                Log.d( "YOUMP3", ze.getName() );
+                Log.d( "XXXX", ze.getName() );
                 File file = new File(targetDirectory, ze.getName());
                 File dir = ze.isDirectory() ? file : file.getParentFile();
                 if ( !dir.isDirectory() && !dir.mkdirs() )

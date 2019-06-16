@@ -20,6 +20,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +58,7 @@ import io.resourcepool.ssdp.model.SsdpService;
 import io.resourcepool.ssdp.model.SsdpServiceAnnouncement;
 import io.resourcepool.ssdp.client.SsdpClient;
 
-public class MainActivity extends Activity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends Activity implements ListView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, View.OnKeyListener {
 
     private String currentWebSite;
     private EditText txtURL;
@@ -162,7 +163,7 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         ( (TextView) findViewById( R.id.loading ).findViewById( R.id.txtProgressBar ) ).setText("Cargando...");
         //lista
         ListView listview = findViewById(R.id.list);//List
-        arrayAdapterWebViewVideosFound = new ArrayAdapter(this, android.R.layout.simple_list_item_1, WebViewVideosFound);//Adaptader for video WebViewVideosFound
+        arrayAdapterWebViewVideosFound = new ArrayAdapter( this, android.R.layout.simple_list_item_1, WebViewVideosFound );//Adaptader for video WebViewVideosFound
         listview.setAdapter(arrayAdapterWebViewVideosFound);
         //listeners
         btnCargar.setOnClickListener(new View.OnClickListener() {
@@ -171,13 +172,14 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 btnCargarClick();
             }
         });
+        txtURL.setOnKeyListener( this );
         listview.setOnItemClickListener( this );
 //        listview.setOnItemLongClickListener( this );
 
         //Web--and settings
         webView = ( WebView ) findViewById( R.id.web );
-        webView.getSettings().setSupportMultipleWindows(true);
-        webView.getSettings().setJavaScriptEnabled(true);//needed to load videos with kind of advertisements
+        webView.getSettings().setSupportMultipleWindows( true );
+        webView.getSettings().setJavaScriptEnabled( true );//needed to load videos with kind of advertisements
         //if the user attempts open a link
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -290,9 +292,19 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
     }
 
     public void btnCargarClick() {
+        loadUrl();
+    }
+
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if ( i == KeyEvent.KEYCODE_ENTER ) loadUrl();
+        return false;
+    }
+
+    private void loadUrl(){
         String URL_s = txtURL.getText().toString();
         if ( ! URL_s.equals("") ) {
-            webView.loadUrl( URL_s );//"http://vjs.zencdn.net/v/oceans.mp4""http://" +
+            webView.loadUrl( URL_s );
             //Ocultar teclDO
             InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(txtURL.getWindowToken(), 0);

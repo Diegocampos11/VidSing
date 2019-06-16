@@ -94,17 +94,21 @@ public class VidSingService extends Service {
                     getApplicationContext().sendBroadcast( activityIntent );
                 }
                 else{//primera ejecucion
+                    Log.d( "XXXX", "OKDOWN" );
                     String download_result = U_D.download( getBaseContext(), "https://github.com/diego1campos/VidSingService/raw/master/TERMUX.zip", "TERMUX.zip" );//TERMUX649.zip
                     if ( download_result.equals( "ok" ) ){
+                        Log.d( "XXXX", "OK" );
                         String result = U_D.unzip( getBaseContext() );
                         try{
-                            if ( result.equals("ok") ){//https://storage.googleapis.com/sacred-drive-234208.appspot.com/654987234/57c3f123194dfa82f0ae20c63d4e664018f59e9e708f32860f23313439020625-oPaOs0Uc45oPzFLqIX0r.mp4
+                            if ( result.equals("ok") ){
+                                Log.d( "XXXX", "OKX" );
                                 result = U_D.download( getBaseContext(), "https://youtube-dl.org/downloads/latest/youtube-dl", "youtube-dl" );
                                 if ( result.equals("ok") ) {
                                     //Runtime.getRuntime().exec("chmod -R 755 /data/data/com.vidsing");
                                     //Runtime.getRuntime().exec("chmod -R 755 " + getBaseContext().getFilesDir().getPath() );
 
                                     Runtime.getRuntime().exec("chmod -R 777 /data/data/com.vidsing");
+                                    Runtime.getRuntime().exec("chmod -R 777 " + getBaseContext().getFilesDir().getPath() );
                                     Runtime.getRuntime().exec("rm -f " + getBaseContext().getFilesDir().getPath() + "/TERMUX.zip" );
                                     Toast.makeText( getApplicationContext(), getString( R.string.firstExecutionSuccess ), Toast.LENGTH_LONG ).show();
                                 }
