@@ -83,7 +83,11 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         @Override
         public void onReceive(final Context context, final Intent intent) {
             String action = intent.getAction();
-            if (action.equals("2")) {//codigo que recibo desde el servicio
+            if ( action.equals("1") ){//codigo que recibo desde el servicio... primera ejecucion terminada :)
+                //Toast.makeText( getApplicationContext(), getString( R.string.firstExecutionSuccess ), Toast.LENGTH_LONG ).show();
+                showDialog( getString( R.string.successTitle ), getString( R.string.firstExecutionSuccess ) );
+            }
+            else if ( action.equals("2") ) {//codigo que recibo desde el servicio... obtiene todo desde youtube
                 //obtengo respuesta del servidor
                 String res = intent.getStringExtra("res");
                 //send to MyHandler and then to smart tv :D
@@ -255,7 +259,10 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
             if ( ! new java.io.File( getBaseContext().getFilesDir().getPath() + "/bin/python" ).exists() ) {//VidSingService
                 Toast.makeText(getBaseContext(), getString( R.string.appBeingInitialized ), Toast.LENGTH_LONG).show();
                 //download files
-                if ( U_D.isOnline( getBaseContext() ) ) startService( new Intent( this, VidSingService.class ).putExtra("inicio", true ) );
+                if ( U_D.isOnline( getBaseContext() ) ){
+                    startService( new Intent( this, VidSingService.class ).putExtra("inicio", true ) );
+                    registerBroadcastReceiver();//so as to show a message :D
+                }
                 else Toast.makeText(getBaseContext(), getString( R.string.errorMessNoInternet ), Toast.LENGTH_LONG).show();
             }
             else{
@@ -536,6 +543,14 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
         return true;
     }
 
+    private void showDialog( String title, String message ){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle( title );
+        builder.setMessage( message );
+        builder.setPositiveButton(getString( R.string.accept ), null);
+        builder.show();
+    }
+
     private final class MyHandler extends Handler {
 
         private int what;
@@ -642,9 +657,10 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                 //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
                 int responseCode = con.getResponseCode();
                 con.disconnect();
-                Log.d("XXXX", "POST connect Response Code :: " + responseCode);
+                Log.d("XXXX", "GET info Response Code :: " + responseCode);
                 if ( responseCode == HttpURLConnection.HTTP_OK ) {
                     //ESTABLISH THE CONNECTION BETWEEN THE APP AND THE SMART TV
+                    Thread.sleep(2000);
                     con = createRequest( TVSelected + "/connect", 0 );
                     //con.setRequestProperty("User-Agent", "Mozilla/5.0");//"curl/7.20.1 (i686-pc-cygwin) libcurl/7.20.1 OpenSSL/0.9.8r zlib/1.2.5 libidn/1.18 libssh2/1.2.5");
                     //headers needed
@@ -720,14 +736,6 @@ public class MainActivity extends Activity implements ListView.OnItemClickListen
                     }
                 });
             }
-        }
-
-        private void showDialog( String title, String message ){
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle( title );
-            builder.setMessage( message );
-            builder.setPositiveButton(getString( R.string.accept ), null);
-            builder.show();
         }
     }
 }

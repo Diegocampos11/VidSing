@@ -104,14 +104,16 @@ public class VidSingService extends Service {
                                 Log.d( "XXXX", "OKX" );
                                 result = U_D.download( getBaseContext(), "https://youtube-dl.org/downloads/latest/youtube-dl", "youtube-dl" );
                                 if ( result.equals("ok") ) {
-                                    //So as to test everything works correctly using Android emulaor and Vysor :)
+                                    //So as to WORKS everything ACCURATELY "777"
+                                    //BUT IT'S REALLY NEEDED TO SET AT LEAST THE EXECUTE PERMISSION TO DE PYTHON FILE "755" :)
                                     //Runtime.getRuntime().exec("chmod -R 755 /data/data/com.vidsing");
-                                    //Runtime.getRuntime().exec("chmod -R 755 " + getBaseContext().getFilesDir().getPath() );
-
-//                                    Runtime.getRuntime().exec("chmod -R 777 /data/data/com.vidsing");
-//                                    Runtime.getRuntime().exec("chmod -R 777 " + getBaseContext().getFilesDir().getPath() );
+                                    Runtime.getRuntime().exec("chmod -R 755 " + getBaseContext().getFilesDir().getPath() );
                                     Runtime.getRuntime().exec("rm -f " + getBaseContext().getFilesDir().getPath() + "/TERMUX.zip" );
-                                    Toast.makeText( getApplicationContext(), getString( R.string.firstExecutionSuccess ), Toast.LENGTH_LONG ).show();
+                                    //Toast.makeText( getApplicationContext(), getString( R.string.firstExecutionSuccess ), Toast.LENGTH_LONG ).show();
+                                    //ENVIAR RESPUESTA A ACTIVITY
+                                    final Intent activityIntent = new Intent("1");//accion a ejecutar en la activity
+                                    activityIntent.putExtra("none", "none");
+                                    getApplicationContext().sendBroadcast( activityIntent );
                                 }
                             }
                         }
